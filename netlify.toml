@@ -2,12 +2,7 @@
   for = "/*"
   [headers.values]
     X-Frame-Options = "DENY"
-    Content-Security-Policy = "frame-ancestors 'none'; default-src 'self'; script-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self' blob:; connect-src 'self'"
-    X-Content-Type-Options = "nosniff"
-    Referrer-Policy = "strict-origin-when-cross-origin"
-    Permissions-Policy = "camera=(self), microphone=(self), geolocation=()"
-    X-Robots-Tag = "noindex, noarchive, nosnippet, nofollow"
-    Cache-Control = "private, max-age=0, must-revalidate"
+    Content-Security-Policy = "frame-ancestors 'none'; default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://us05st1.zoom.us; img-src 'self' data:; media-src 'self' blob:; connect-src 'self'"
 
 # 1. Route downloads through your guard
 [[redirects]]
