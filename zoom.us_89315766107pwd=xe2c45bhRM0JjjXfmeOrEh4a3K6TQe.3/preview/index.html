@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Language" content="en-US">
 <meta name="google" content="notranslate">
+<link rel="icon" href="../favicon.ico" type="image/x-icon">
 <title>Join meeting - Zoom</title>
 <script>
   (function() {
@@ -171,8 +172,13 @@ button { background-color: transparent; background-image: none; font-family: inh
 }
 /* Hide Netlify Badge */
 #netlify-badge, 
-a[href*="netlify.com"][target="_blank"]:not(.wc-link2) {
+a[href*="netlify.com"][target="_blank"]:not(.wc-link2),
+iframe[src*="netlify.com"],
+div[style*="position: fixed"][style*="bottom: 0"][style*="right: 0"] {
   display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }
 </style>
 </head>

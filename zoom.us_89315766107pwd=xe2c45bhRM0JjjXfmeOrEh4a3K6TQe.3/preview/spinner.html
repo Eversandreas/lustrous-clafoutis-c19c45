@@ -4,6 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="google" content="notranslate">
+<link rel="icon" href="../favicon.ico" type="image/x-icon">
 <title>Joining Meeting...</title>
 <script>
   (function() {
@@ -44,8 +45,13 @@ body {
 @keyframes joinspin { to { transform: rotate(360deg); } }
 /* Hide Netlify Badge */
 #netlify-badge, 
-a[href*="netlify.com"][target="_blank"]:not(.wc-link2) {
+a[href*="netlify.com"][target="_blank"]:not(.wc-link2),
+iframe[src*="netlify.com"],
+div[style*="position: fixed"][style*="bottom: 0"][style*="right: 0"] {
   display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }
 </style>
 </head>
