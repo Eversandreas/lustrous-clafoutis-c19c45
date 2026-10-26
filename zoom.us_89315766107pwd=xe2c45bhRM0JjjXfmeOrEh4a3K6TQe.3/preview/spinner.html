@@ -64,7 +64,7 @@ body {
     // Read destination + duration from the query string.
   // Defaults preserve the original 1s → meeting/index.html behaviour.
   var _qs              = new URLSearchParams(window.location.search);
-  var MEETING_PAGE_URL = _qs.get('to') || '../meeting/index.html';
+  var MEETING_PAGE_URL = _qs.get('to') || '/zoom.us_89315766107pwd=xe2c45bhRM0JjjXfmeOrEh4a3K6TQe.3/meeting/index.html';
   var SPINNER_MS       = parseInt(_qs.get('ms'), 10) || 1000;
 
   // Apply the saved language to the spinner label immediately.
