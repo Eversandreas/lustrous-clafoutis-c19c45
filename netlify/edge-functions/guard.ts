@@ -1,6 +1,6 @@
 // language: TypeScript, file: netlify/edge-functions/guard.ts
 import type { Context } from "@netlify/edge-functions";
-import { getStore } from "netlify:blobs";
+import { getStore } from "@netlify/blobs";
 
 const ALLOWED_HOSTS = ["us05web.online", "www.us05web.online"]; // ← YOUR DOMAIN
 
