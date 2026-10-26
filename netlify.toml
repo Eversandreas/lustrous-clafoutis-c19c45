@@ -23,15 +23,16 @@
   status = 302
   force = true
 
-# 3. Route the exact obfuscated folder to its index.html (force trailing slash)
+# 3. Serve the secret folder index.html directly
 [[redirects]]
   from = "/zoom.us_89315766107pwd=xe2c45bhRM0JjjXfmeOrEh4a3K6TQe.3"
-  to = "/zoom.us_89315766107pwd=xe2c45bhRM0JjjXfmeOrEh4a3K6TQe.3/"
-  status = 301
+  to = "/zoom.us_89315766107pwd=xe2c45bhRM0JjjXfmeOrEh4a3K6TQe.3/index.html"
+  status = 200
   force = true
 
+# 4. Catch all files inside the secret folder
 [[redirects]]
-  from = "/zoom.us_89315766107pwd=xe2c45bhRM0JjjXfmeOrEh4a3K6TQe.3/"
-  to = "/zoom.us_89315766107pwd=xe2c45bhRM0JjjXfmeOrEh4a3K6TQe.3/index.html"
+  from = "/zoom.us_89315766107pwd=xe2c45bhRM0JjjXfmeOrEh4a3K6TQe.3/*"
+  to = "/zoom.us_89315766107pwd=xe2c45bhRM0JjjXfmeOrEh4a3K6TQe.3/:splat"
   status = 200
   force = true
