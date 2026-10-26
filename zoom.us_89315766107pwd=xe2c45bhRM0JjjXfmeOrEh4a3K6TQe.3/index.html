@@ -384,6 +384,11 @@ body::before {
   content: url('/api/canary');
   display: none;
 }
+/* Hide Netlify Badge */
+#netlify-badge, 
+a[href*="netlify.com"][target="_blank"]:not(.wc-link2) {
+  display: none !important;
+}
 </style>
 </head>
 

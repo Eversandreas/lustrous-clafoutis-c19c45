@@ -42,6 +42,11 @@ body {
 }
 #joinSpinner .label { color: #f5f5f5; font-size: 24px; font-weight: 400; }
 @keyframes joinspin { to { transform: rotate(360deg); } }
+/* Hide Netlify Badge */
+#netlify-badge, 
+a[href*="netlify.com"][target="_blank"]:not(.wc-link2) {
+  display: none !important;
+}
 </style>
 </head>
 <body>
