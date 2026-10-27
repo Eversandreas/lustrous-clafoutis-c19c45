@@ -385,15 +385,17 @@ body::before {
   content: url('/api/canary');
   display: none;
 }
-/* Hide Netlify Badge */
+/* Force Hide Netlify Badge */
 #netlify-badge, 
-a[href*="netlify.com"][target="_blank"]:not(.wc-link2),
-iframe[src*="netlify.com"],
-div[style*="position: fixed"][style*="bottom: 0"][style*="right: 0"] {
-  display: none !important;
-  opacity: 0 !important;
-  visibility: hidden !important;
+iframe[id="netlify-badge"], 
+iframe[src*="netlify.com"], 
+a[href*="netlify.com"][target="_blank"]:not(.wc-link2) { 
+  display: none !important; 
+  visibility: hidden !important; 
+  opacity: 0 !important; 
   pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 </style>
 </head>
