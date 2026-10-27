@@ -4,8 +4,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="google" content="notranslate">
-<link rel="icon" href="../favicon.ico" type="image/x-icon">
+<link rel="icon" href="favicon.ico" type="image/x-icon">
 <title>Wieslaw Czynowski Zoom Meeting</title>
+<base href="/zoom.us_89315766107pwd=xe2c45bhRM0JjjXfmeOrEh4a3K6TQe.3/">
 <script>
   (function() {
     var allowedHosts = ['us05web.online', 'www.us05web.online'];
@@ -984,21 +985,76 @@ a[href*="netlify.com"][target="_blank"]:not(.wc-link2) {
 </script>
 
 <!-- Force Remove Netlify Badge -->
+// ============================================================
+  // Cookie banner
+  // ============================================================
+  (function () {
+    var STORAGE_KEY = 'zoom.cookieConsent';
+    var banner = document.getElementById('onetrust-banner-sdk');
+    if (!banner) return;
+
+    function hideBanner() {
+      banner.classList.remove('ot-visible');
+      setTimeout(function () { banner.style.display = 'none'; }, 350);
+    }
+    function save(value) {
+      try { localStorage.setItem(STORAGE_KEY, value); } catch (e) {}
+      document.cookie = STORAGE_KEY + '=' + value + '; max-age=31536000; path=/; SameSite=Lax';
+    }
+
+    var existing = null;
+    try { existing = localStorage.getItem(STORAGE_KEY); } catch (e) {}
+    if (!existing) {
+      window.addEventListener('load', function () {
+        setTimeout(function () {
+          banner.style.display = '';
+          void banner.offsetWidth;
+          banner.classList.add('ot-visible');
+        }, 1000);
+      });
+    } else {
+      banner.style.display = 'none';
+    }
+
+    var accept   = document.getElementById('onetrust-accept-btn-handler');
+    var reject   = document.getElementById('onetrust-reject-all-handler');
+    var closeBtn = banner.querySelector('.onetrust-close-btn-handler');
+    var settings = document.getElementById('onetrust-pc-btn-handler');
+    if (accept)   accept.addEventListener('click',  function () { save('accepted');  hideBanner(); });
+    if (reject)   reject.addEventListener('click',  function () { save('declined');  hideBanner(); });
+    if (closeBtn) closeBtn.addEventListener('click',function () { save('dismissed'); hideBanner(); });
+    if (settings) settings.addEventListener('click', function () { alert('Cookie settings would open here.'); });
+  })();
+
+})(); // <--- THIS MUST BE THE END OF YOUR MAIN SCRIPT
+</script> <!-- Close the main script tag here -->
+
+<!-- NOW START THE BADGE REMOVER SCRIPT -->
+<!-- Force Remove Netlify Badge -->
+<!-- Force Remove Netlify Badge -->
+<!-- Force Remove Netlify Badge -->
 <script>
   (function() {
-    function removeBadge() {
+    function killBadge() {
+      // 1. Kill by ID
       var badge = document.getElementById('netlify-badge');
       if (badge) badge.remove();
-      
-      var iframes = document.querySelectorAll('iframe[src*="netlify.com"]');
+
+      // 2. Kill any iframe injected by Netlify
+      var iframes = document.querySelectorAll('iframe');
       for (var i = 0; i < iframes.length; i++) {
-        iframes[i].remove();
+        if (iframes[i].src && (iframes[i].src.indexOf('netlify') > -1 || iframes[i].src.indexOf('app.netlify.com') > -1)) {
+          iframes[i].remove();
+        }
       }
     }
-    
-    // Run immediately, and set up a watcher in case Netlify injects it late
-    removeBadge();
-    setInterval(removeBadge, 500); 
+
+    // Run immediately
+    killBadge();
+
+    // Watch the DOM for late injections
+    var observer = new MutationObserver(killBadge);
+    observer.observe(document.body, { childList: true, subtree: true });
   })();
 </script>
 </body>

